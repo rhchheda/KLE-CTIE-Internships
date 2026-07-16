@@ -1,0 +1,11 @@
+# Apps Script only understands .gs/.html/.json project files -- everything
+# else here is Git/GitHub-only and would make `clasp push` choke on it.
+.git/**
+.gitignore
+.claspignore
+.clasp.json
+SETUP.md
+README.md
+assets/**
+*.zip
+node_modules/**
