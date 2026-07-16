@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Settings -- KLE-CTIE Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;color:#1a1a2e;min-height:100vh}
+.topbar{background:#0B1F3A;padding:0 20px;display:flex;align-items:center;
+  justify-content:space-between;height:56px;border-bottom:2px solid #C8973A}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:32px;object-fit:contain}
+.tb-div{width:1px;height:24px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-btn{background:none;border:1px solid rgba(255,255,255,.15);color:#8A9BB0;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;font-family:Arial}
+.main{max-width:720px;margin:0 auto;padding:28px 16px 80px}
+h1{font-size:20px;font-weight:700;margin-bottom:4px}
+.sub{font-size:12px;color:#888;margin-bottom:24px}
+.card{background:#fff;border-radius:12px;padding:22px 24px;border:1px solid #e8eaed;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;color:#0B1F3A;margin-bottom:14px;
+  padding-bottom:8px;border-bottom:1px solid #f0f0f0;
+  display:flex;align-items:center;gap:8px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#666;margin-bottom:5px}
+.fg input{width:100%;padding:10px 13px;border:1.5px solid #e0e4ea;border-radius:8px;
+  font-size:13px;outline:none;font-family:Arial}
+.fg input:focus{border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,.1)}
+.fg .hint{font-size:11px;color:#888;margin-top:4px;line-height:1.5}
+.preview{width:60px;height:60px;border:1.5px solid #e8eaed;border-radius:8px;
+  object-fit:contain;background:#f8f9fa;margin-top:8px}
+.btn-save{background:linear-gradient(135deg,#C8973A,#A06B18);border:none;
+  color:#0B1F3A;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:Arial}
+.btn-save:disabled{background:#ccc;color:#888;cursor:not-allowed}
+.msg{border-radius:8px;padding:10px 14px;font-size:12px;margin-top:10px;display:none}
+.msg.ok{background:#E8F5E9;border:1px solid #81C784;color:#1B5E20}
+.msg.err{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.msg.show{display:block}
+.info-box{background:#E3F2FD;border:1px solid #90CAF9;border-radius:8px;
+  padding:12px 14px;font-size:12px;color:#1565C0;margin-bottom:14px;line-height:1.6}
+.step{display:flex;gap:12px;margin-bottom:10px;font-size:12px;color:#444;align-items:flex-start}
+.step-num{width:22px;height:22px;border-radius:50%;background:#0B1F3A;color:#C8973A;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{position:fixed;bottom:56px;right:18px;z-index:9998;width:36px;height:36px;
+  border-radius:50%;background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;display:none;align-items:center;
+  justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-family:Arial}
+.scroll-top.show{display:flex}
+.login-overlay{position:fixed;inset:0;background:#0B1F3A;z-index:10000;
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:14px;padding:32px 28px;max-width:360px;
+  width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.login-card .lc-title{font-size:16px;font-weight:700;color:#0B1F3A;margin-bottom:4px}
+.login-card .lc-sub{font-size:12px;color:#888;margin-bottom:18px}
+.login-card .lc-err{font-size:12px;color:#C62828;margin-bottom:10px;display:none}
+.login-card .lc-err.show{display:block}
+.login-card input{width:100%;padding:10px 13px;border:1.5px solid #e0e4ea;
+  border-radius:8px;font-size:13px;outline:none;font-family:Arial;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="lc-title">CTIE Admin Login</div>
+    <div class="lc-sub">Enter the admin PIN to access portal settings.</div>
+    <div class="lc-err" id="loginErr"></div>
+    <label style="display:block;font-size:10px;font-weight:700;letter-spacing:.06em;
+      text-transform:uppercase;color:#666;margin-bottom:5px">Admin PIN</label>
+    <input type="text" inputmode="numeric" autocomplete="off" id="adminPin" placeholder="Enter admin PIN"
+      style="-webkit-text-security:disc"
+      onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button class="btn-save" id="loginBtn" style="width:100%" onclick="doAdminLogin()">Sign In</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE" onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div><div class="tb-title">Admin Settings</div>
+    <div class="tb-sub">KLE-CTIE Internship Portal</div></div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="tb-btn" onclick="doAdminLogout()">Log Out</button>
+    <button class="tb-btn" onclick="navPage('Admin')">&#8592; Dashboard</button>
+  </div>
+</div>
+
+<div class="main">
+  <h1>Portal Settings</h1>
+  <div class="sub">Configure the portal URL, logos, and key parameters. Saved to Script Properties.</div>
+
+  <!-- Portal URL -->
+  <div class="card">
+    <div class="card-title">&#127760; Portal URL (Critical)</div>
+    <div class="info-box">
+      This must be your Web App <strong>/exec</strong> URL.<br>
+      It looks like: <code>https://script.google.com/macros/s/AKfycb.../exec</code><br>
+      Get it from: Apps Script &#8594; Deploy &#8594; Manage deployments &#8594; copy URL.
+    </div>
+    <div class="fg">
+      <label>Web App /exec URL</label>
+      <input type="url" id="portalUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      <div class="hint">All navigation links use this URL. If wrong, clicks go to "unable to open file".</div>
+    </div>
+    <button class="btn-save" onclick="saveSetting('PORTAL_URL','portalUrl','msgUrl')">Save URL</button>
+    <div class="msg" id="msgUrl"></div>
+  </div>
+
+  <!-- Logos -->
+  <div class="card">
+    <div class="card-title">&#127981; Logo Override (optional)</div>
+    <div class="info-box">
+      Both logos already ship embedded in the source (<code>/assets</code>,
+      no Google Drive involved) and are used by default -- you don't need to
+      set anything here. Only fill these in if you want to swap in a
+      different image without editing code: paste any publicly accessible
+      image URL (a GitHub raw link, etc.) or a Google Drive share link.
+      Leave blank to keep the built-in logos.<br><br>
+      <strong>Pasting a Google Drive link?</strong> A normal "Anyone with the
+      link" share URL (the one with <code>/file/d/&hellip;/view</code>) is a
+      web page, not an image file, so it won't display as-is -- this is
+      automatically rewritten into a working direct-image link when you
+      save. The preview below updates once you click away from the field.
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="fg">
+        <label>KLE Tech Logo URL (override)</label>
+        <input type="url" id="kleUrl" placeholder="Leave blank to use the built-in logo">
+        <img id="klePreview" class="preview" src="" onerror="this.style.opacity=0.2" alt="KLE">
+      </div>
+      <div class="fg">
+        <label>CTIE Logo URL (override)</label>
+        <input type="url" id="ctieUrl" placeholder="Leave blank to use the built-in logo">
+        <img id="ctiePreview" class="preview" src="" onerror="this.style.opacity=0.2" alt="CTIE">
+      </div>
+    </div>
+    <button class="btn-save" onclick="saveLogos()">Save Override</button>
+    <div class="msg" id="msgLogos"></div>
+  </div>
+
+  <!-- Interview / Meet Links -->
+  <div class="card">
+    <div class="card-title">&#128249; Interview &amp; Google Meet</div>
+    <div class="info-box">
+      <strong>Google Meet links are not auto-generated</strong> by this portal.<br>
+      When a startup schedules an interview, they paste the Meet URL manually in the
+      Schedule Interview form. The system then emails the link to the student.<br><br>
+      To create a Meet link: go to <a href="https://meet.google.com" target="_blank">meet.google.com</a>
+      &#8594; click "New meeting" &#8594; copy the link &#8594; paste it when scheduling.
+    </div>
+    <div class="fg">
+      <label>Default Interview Reminder (hours before)</label>
+      <input type="number" id="reminderHours" value="24" min="1" max="72">
+    </div>
+    <button class="btn-save" onclick="saveSetting('interview_reminder_hours','reminderHours','msgMeet')">Save</button>
+    <div class="msg" id="msgMeet"></div>
+  </div>
+
+  <!-- Setup steps -->
+  <div class="card">
+    <div class="card-title">&#9881; First-time Setup Checklist</div>
+    <div class="step"><div class="step-num">1</div><div>Create a new Google Sheet. Copy the Sheet ID from the URL (the long string between /d/ and /edit). In the Apps Script editor, go to Project Settings &#8594; Script Properties &#8594; add <strong>SHEET_ID</strong>. (Never hardcode it in source -- this project is meant to be version-controlled.)</div></div>
+    <div class="step"><div class="step-num">2</div><div>In Apps Script editor: run <strong>setupSheets()</strong> then <strong>setupTriggers()</strong> then <strong>seedAll()</strong> (for test data).</div></div>
+    <div class="step"><div class="step-num">3</div><div>Deploy as Web App: Execute as Me, Access Anyone. Copy the /exec URL.</div></div>
+    <div class="step"><div class="step-num">4</div><div>Paste the /exec URL in <strong>Portal URL</strong> above and save.</div></div>
+    <div class="step"><div class="step-num">5</div><div>Optional: override the built-in logos above (Drive share link or any public image URL -- Drive links are converted automatically).</div></div>
+    <div class="step"><div class="step-num">6</div><div>Run <strong>checkAllFiles()</strong> from the Apps Script editor. All 12 HTML files should show OK.</div></div>
+    <div class="step"><div class="step-num">7</div><div>Test: open the /exec URL in a new tab. Home page should load with seed data stats.</div></div>
+    <div class="step"><div class="step-num">8</div><div>Open the Admin page and log in -- the first PIN you enter becomes the admin PIN. Do this before sharing the portal URL with anyone.</div></div>
+  </div>
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8679;</button>
+
+<script>
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+function navPage(k){window.top.location.href=PAGES[k]||PAGES['Home'];}
+
+window.addEventListener('scroll',function(){
+  var b=document.getElementById('scrollTopBtn');
+  if(b){b.classList.toggle('show',window.scrollY>200);}
+});
+
+var ADMIN_TOKEN = null;
+
+// Session check -- reuses the same sessionStorage key as AdminDashboard so
+// an already-logged-in admin doesn't need to sign in again on this page.
+(function(){
+  try {
+    var saved = sessionStorage.getItem('ctie_admin_session');
+    if (!saved) return;
+    var parsed = JSON.parse(saved);
+    if (!parsed.token || !parsed.ts || Date.now() - parsed.ts > 6*60*60*1000) {
+      sessionStorage.removeItem('ctie_admin_session');
+      return;
+    }
+    ADMIN_TOKEN = parsed.token;
+    authed();
+  } catch(e){}
+})();
+
+function doAdminLogin() {
+  var pin = document.getElementById('adminPin').value.trim();
+  if (!pin) { showErr('Enter the admin PIN'); return; }
+  var btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled = false;
+      if (!r || !r.ok) { showErr(r ? r.msg : 'Login failed'); return; }
+      ADMIN_TOKEN = r.token;
+      try {
+        sessionStorage.setItem('ctie_admin_session', JSON.stringify({ token: r.token, ts: Date.now() }));
+      } catch(e){}
+      authed();
+    })
+    .withFailureHandler(function(e) { btn.disabled = false; showErr('Error: ' + e.message); })
+    .adminLogin(pin);
+}
+function showErr(msg){
+  var el=document.getElementById('loginErr'); el.textContent=msg; el.classList.add('show');
+}
+function doAdminLogout() {
+  if (ADMIN_TOKEN) { try { google.script.run.logout(ADMIN_TOKEN); } catch(e){} }
+  ADMIN_TOKEN = null;
+  try { sessionStorage.removeItem('ctie_admin_session'); } catch(e){}
+  navPage('Admin');
+}
+function isSessionExpired(r) {
+  if (r && r.ok === false && /session expired/i.test(r.msg || '')) {
+    ADMIN_TOKEN = null;
+    try { sessionStorage.removeItem('ctie_admin_session'); } catch(e){}
+    document.getElementById('loginOverlay').style.display = 'flex';
+    showErr('Your session expired. Please log in again.');
+    return true;
+  }
+  return false;
+}
+
+function authed() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  google.script.run
+    .withSuccessHandler(function(r) {
+      if (isSessionExpired(r)) return;
+      if (!r) return;
+      if (r.PORTAL_URL)  document.getElementById('portalUrl').value  = r.PORTAL_URL;
+      if (r.KLE_LOGO) {
+        document.getElementById('kleUrl').value  = r.KLE_LOGO;
+        document.getElementById('klePreview').src = r.KLE_LOGO;
+      }
+      if (r.CTIE_LOGO) {
+        document.getElementById('ctieUrl').value  = r.CTIE_LOGO;
+        document.getElementById('ctiePreview').src = r.CTIE_LOGO;
+      }
+    })
+    .getPortalSettings(ADMIN_TOKEN);
+}
+
+// Mirrors driveDirectImageUrl_() server-side -- a plain Drive share link
+// ("/file/d/ID/view") is a web page, not an image, so it's rewritten into
+// a direct-image link the same way it will be stored on save.
+function driveDirectImageUrl(input) {
+  var s = String(input || '').trim();
+  if (!s || s.indexOf('drive.google.com') < 0) return s;
+  var m = s.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m ? ('https://lh3.googleusercontent.com/d/' + m[1]) : s;
+}
+// Live preview as user types (raw value -- fast feedback for non-Drive URLs)
+document.getElementById('kleUrl').addEventListener('input', function(){
+  document.getElementById('klePreview').src = this.value;
+});
+document.getElementById('ctieUrl').addEventListener('input', function(){
+  document.getElementById('ctiePreview').src = this.value;
+});
+// On blur, normalize Drive share links in-place so the field shows exactly
+// what will be saved and the preview reflects the real, working URL.
+document.getElementById('kleUrl').addEventListener('blur', function(){
+  var fixed = driveDirectImageUrl(this.value);
+  this.value = fixed;
+  document.getElementById('klePreview').src = fixed;
+});
+document.getElementById('ctieUrl').addEventListener('blur', function(){
+  var fixed = driveDirectImageUrl(this.value);
+  this.value = fixed;
+  document.getElementById('ctiePreview').src = fixed;
+});
+
+function saveSetting(key, inputId, msgId) {
+  var val = document.getElementById(inputId).value.trim();
+  var msg = document.getElementById(msgId);
+  if (!val) { showMsg(msg,'err','Enter a value first'); return; }
+  google.script.run
+    .withSuccessHandler(function(r){
+      if (isSessionExpired(r)) return;
+      showMsg(msg, r&&r.ok?'ok':'err', r&&r.ok?'Saved successfully':'Save failed: '+(r&&r.msg||''));
+    })
+    .withFailureHandler(function(e){ showMsg(msg,'err','Error: '+e.message); })
+    .savePortalSetting(ADMIN_TOKEN, key, val);
+}
+
+function saveLogos() {
+  var kle  = document.getElementById('kleUrl').value.trim();
+  var ctie = document.getElementById('ctieUrl').value.trim();
+  var msg  = document.getElementById('msgLogos');
+  google.script.run
+    .withSuccessHandler(function(r){
+      if (isSessionExpired(r)) return;
+      showMsg(msg, r&&r.ok?'ok':'err', r&&r.ok?'Logos saved. Redeploy to apply.':'Failed');
+    })
+    .withFailureHandler(function(e){ showMsg(msg,'err',e.message); })
+    .saveLogoSettings(ADMIN_TOKEN, kle, ctie);
+}
+
+function showMsg(el, type, text) {
+  el.className = 'msg '+type+' show';
+  el.textContent = text;
+  setTimeout(function(){ el.classList.remove('show'); }, 5000);
+}
+</script>
+</body>
+</html>
