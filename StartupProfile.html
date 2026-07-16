@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Startup Profile -- KLE-CTIE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh}
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;border-bottom:2px solid #C8973A}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-div{width:1px;height:26px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{color:#8A9BB0;border:1px solid rgba(255,255,255,0.15);background:none;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;font-family:Arial;transition:all .2s}
+.tb-btn:hover{color:#F7F3EC}
+
+.main{max-width:900px;margin:0 auto;padding:24px 16px 80px;
+  display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+
+/* Profile sidebar */
+.profile-card{background:#fff;border-radius:14px;padding:24px;
+  border:1px solid #e8eaed;position:sticky;top:24px}
+.avatar{width:72px;height:72px;border-radius:14px;background:#0B1F3A;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:700;color:#C8973A;margin-bottom:14px}
+.avatar.has-logo{background:#fff;border:1.5px solid #e8eaed}
+.avatar img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+.startup-name{font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.startup-sector{font-size:12px;color:#888;margin-bottom:12px}
+.badge{display:inline-block;font-size:10px;padding:3px 9px;border-radius:10px;
+  font-weight:700;margin:2px}
+.b-gold{background:#FFF3DE;color:#854F0B;border:1px solid #EF9F27}
+.b-blue{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.b-green{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.meta-row{display:flex;align-items:center;gap:8px;padding:7px 0;
+  border-bottom:1px solid #f4f6f9;font-size:12px;color:#555}
+.meta-row:last-child{border-bottom:none}
+.meta-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+.meta-val{flex:1;color:#1a1a2e}
+.meta-val a{color:#1565C0;text-decoration:none;word-break:break-all}
+.meta-val a:hover{text-decoration:underline}
+.opc-section{background:#f8f9fa;border-radius:8px;padding:12px;margin-top:14px}
+.opc-label{font-size:10px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:#888;margin-bottom:8px}
+.opc-name{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.opc-detail{font-size:11px;color:#666;line-height:1.6}
+.opc-detail a{color:#1565C0;text-decoration:none}
+
+/* Right: about + roles */
+.about-card{background:#fff;border-radius:14px;padding:22px 24px;
+  border:1px solid #e8eaed;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px}
+.about-text{font-size:13px;color:#444;line-height:1.8}
+.no-about{color:#aaa;font-size:13px;font-style:italic}
+
+/* Roles */
+.role-row{background:#f8f9fa;border-radius:10px;padding:14px 16px;
+  margin-bottom:10px;display:flex;align-items:flex-start;
+  justify-content:space-between;gap:12px;transition:all .2s}
+.role-row:hover{background:#FFFBF4;border:1px solid rgba(200,151,58,0.3);
+  margin:-1px;padding:15px 17px}
+.role-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:3px}
+.role-meta{font-size:11px;color:#888;display:flex;gap:10px;flex-wrap:wrap}
+.btn-apply{background:linear-gradient(135deg,#C8973A,#A06B18);border:none;
+  color:#0B1F3A;padding:7px 16px;border-radius:7px;font-size:11px;
+  font-weight:700;cursor:pointer;font-family:Arial;white-space:nowrap;
+  text-decoration:none;display:inline-block}
+.btn-apply:hover{opacity:0.9}
+.no-roles{color:#aaa;font-size:13px;text-align:center;padding:20px;font-style:italic}
+
+/* States */
+.loading{text-align:center;padding:40px;color:#888}
+.not-found{text-align:center;padding:60px 20px}
+.nf-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
+
+.spin{display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(200,151,58,.2);border-top-color:#C8973A;
+  border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media(max-width:720px){
+  .main{grid-template-columns:1fr}
+  .profile-card{position:static}
+}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div>
+      <div class="tb-title">Startup Profile</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('Browse')" type="button">Browse Roles</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div id="loadingState" style="text-align:center;padding:60px;color:#888">
+  <span class="spin"></span>
+  <div style="margin-top:12px;font-size:13px">Loading startup profile...</div>
+</div>
+
+<div id="notFound" style="display:none;text-align:center;padding:60px 20px">
+  <div style="font-size:40px;opacity:0.3;margin-bottom:12px">&#127970;</div>
+  <div style="font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:8px">Startup not found</div>
+  <div style="font-size:13px;color:#888;margin-bottom:16px">
+    This startup profile is not available.
+  </div>
+  <button class="btn-apply" onclick="navPage('Browse')" type="button">Browse Open Roles</button>
+</div>
+
+<div class="main" id="profileMain" style="display:none">
+
+  <!-- Left sidebar -->
+  <div>
+    <div class="profile-card">
+      <div class="avatar" id="pAvatar">--</div>
+      <div class="startup-name" id="pName">--</div>
+      <div class="startup-sector" id="pSector">--</div>
+      <div id="pBadges" style="margin-bottom:14px"></div>
+
+      <div id="pMeta" style="margin-bottom:8px"></div>
+
+      <!-- OPC contact -- shown only to selected students (controlled server-side) -->
+      <div class="opc-section" id="opcSection" style="display:none">
+        <div class="opc-label">One-Point Contact</div>
+        <div class="opc-name" id="opcName">--</div>
+        <div class="opc-detail" id="opcDetail">--</div>
+      </div>
+
+      <div style="margin-top:14px">
+        <button class="btn-apply" style="width:100%;text-align:center;display:block;padding:10px" onclick="navPage('Browse')" type="button">
+          View Open Roles &#8594;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right content -->
+  <div>
+    <!-- About -->
+    <div class="about-card">
+      <div class="card-title">&#127970; About</div>
+      <div id="pAbout" class="about-text"></div>
+    </div>
+
+    <!-- Open Internship Roles -->
+    <div class="about-card">
+      <div class="card-title">
+        &#128196; Open Internship Roles
+        <span id="roleCount" style="font-size:11px;font-weight:400;color:#888"></span>
+      </div>
+      <div id="rolesWrap">
+        <div style="text-align:center;padding:20px;color:#aaa">
+          <span class="spin"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTIE verification badge -->
+    <div style="background:#E8F5E9;border-radius:10px;padding:14px 16px;
+      display:flex;align-items:center;gap:12px;border:1px solid #A5D6A7">
+      <div style="font-size:24px">&#9989;</div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#1B5E20">
+          CTIE Verified Incubatee
+        </div>
+        <div style="font-size:11px;color:#388E3C;margin-top:2px">
+          This startup is registered with KLE-CTIE under a formal Incubation Agreement.
+          Internship offers are monitored and protected by the CTIE SLA system.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+var STARTUP_ID= '<?= startupId ?>';
+var STAGE_COLORS = {
+  'Idea -- Research':        'b-blue',
+  'Idea':                    'b-blue',
+  'Prototype':               'b-blue',
+  'MVP -- Early Traction':   'b-green',
+  'Early Traction':          'b-green',
+  'Growth':                  'b-gold',
+};
+
+// Load profile
+if (!STARTUP_ID) {
+  showNotFound();
+} else {
+  google.script.run
+    .withSuccessHandler(function(r) {
+      if (!r || !r.ok) { showNotFound(); return; }
+      renderProfile(r);
+      loadRoles(r.startupId);
+    })
+    .withFailureHandler(showNotFound)
+    .getStartupProfile(STARTUP_ID);
+}
+
+function renderProfile(p) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('profileMain').style.display  = 'grid';
+
+  var initials = (p.name||'?').substring(0,2).toUpperCase();
+  var avatarEl = document.getElementById('pAvatar');
+  if (p.logo) {
+    avatarEl.classList.add('has-logo');
+    avatarEl.innerHTML = '<img src="' + esc(p.logo) + '" alt="" onerror="this.parentNode.classList.remove(\'has-logo\');this.parentNode.textContent=\'' + initials + '\'">';
+  } else {
+    avatarEl.classList.remove('has-logo');
+    avatarEl.textContent = initials;
+  }
+  document.getElementById('pName').textContent     = p.name    || '--';
+  document.getElementById('pSector').textContent   = p.sector  || '';
+
+  // Badges
+  var badges = '';
+  if (p.stage)
+    badges += '<span class="badge ' + (STAGE_COLORS[p.stage]||'b-blue') + '">' + esc(p.stage) + '</span>';
+  if (p.founded)
+    badges += '<span class="badge b-blue">Est. ' + esc(p.founded) + '</span>';
+  document.getElementById('pBadges').innerHTML = badges;
+
+  // Meta rows
+  var meta = '';
+  if (p.website)
+    meta += metaRow('&#127760;',
+      '<a href="' + esc(p.website) + '" target="_blank">' + esc(p.website.replace(/^https?:\/\//,'')) + '</a>');
+  if (p.linkedin)
+    meta += metaRow('&#128101;',
+      '<a href="' + esc(p.linkedin) + '" target="_blank">LinkedIn Profile</a>');
+  if (p.sector)
+    meta += metaRow('&#127970;', esc(p.sector));
+  document.getElementById('pMeta').innerHTML = meta;
+
+  // About
+  document.getElementById('pAbout').innerHTML = p.about
+    ? '<p style="white-space:pre-wrap">' + esc(p.about) + '</p>'
+    : '<p class="no-about">No description provided yet.</p>';
+
+  // OPC -- only show if student is selected (check sessionStorage for confirmation)
+  // For now show to everyone for transparency -- startup can control this
+  if (p.opcName) {
+    document.getElementById('opcSection').style.display = 'block';
+    document.getElementById('opcName').textContent = p.opcName;
+    var opcDetail = '';
+    if (p.opcEmail)
+      opcDetail += '<span>' + esc(p.opcEmail) + '</span><br>';
+    if (p.opcPhone)
+      opcDetail += esc(p.opcPhone);
+    document.getElementById('opcDetail').innerHTML = opcDetail || 'Contact via CTIE portal';
+  }
+
+  // Update page title
+  document.title = esc(p.name) + ' -- KLE-CTIE Internship Portal';
+}
+
+function loadRoles(startupId) {
+  google.script.run
+    .withSuccessHandler(function(r) {
+      var roles = (r && r.ok) ? (r.internships||[]).filter(function(i){
+        return i.Startup_ID === startupId && i.Status === 'Open';
+      }) : [];
+      document.getElementById('roleCount').textContent =
+        '(' + roles.length + ' open)';
+      if (!roles.length) {
+        document.getElementById('rolesWrap').innerHTML =
+          '<div class="no-roles">No open roles at the moment.<br>'
+          + 'Check back soon or browse other startups.</div>';
+        return;
+      }
+      document.getElementById('rolesWrap').innerHTML = roles.map(function(r) {
+        var stipend = parseFloat(r.Stipend_INR||0);
+        var filled  = parseInt(r.Positions_Filled||0);
+        var avail   = parseInt(r.Positions_Available||1);
+        return '<div class="role-row">'
+          + '<div style="flex:1">'
+          + '<div class="role-title">' + esc(r.Role_Title||'') + '</div>'
+          + '<div class="role-meta">'
+          + '<span>&#128197; ' + r.Duration_Weeks + ' weeks</span>'
+          + '<span>&#128100; ' + (avail-filled) + ' position' + (avail-filled!==1?'s':'') + ' open</span>'
+          + '<span>' + esc(r.Work_Mode||'') + '</span>'
+          + (stipend>0?'<span style="color:#854F0B;font-weight:700">Rs.'+stipend.toLocaleString('en-IN')+'/mo</span>'
+                     :'<span>Academic Internship</span>')
+          + (r.Discipline && r.Discipline!=='Any'?'<span>'+esc(r.Discipline)+'</span>':'')
+          + '</div>'
+          + '</div>'
+          + '<a href="' + EXEC_URL + '?page=Browse" class="btn-apply" target="_top">Apply</a>'
+          + '</div>';
+      }).join('');
+    })
+    .withFailureHandler(function(){
+      document.getElementById('rolesWrap').innerHTML =
+        '<div class="no-roles">Could not load roles.</div>';
+    })
+    .getOpenInternships({});
+}
+
+function showNotFound() {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('notFound').style.display     = 'block';
+}
+function metaRow(icon, val) {
+  return '<div class="meta-row">'
+    + '<span class="meta-icon">' + icon + '</span>'
+    + '<span class="meta-val">' + val + '</span></div>';
+}
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
