@@ -8,12 +8,10 @@ KLE-CTIE connects engineering and management students with CTIE-incubated startu
 
 | I'm a... | Do this |
 |---|---|
-| 🎓 **Student** | [**Browse open roles →**](<PASTE-YOUR-PORTAL-URL-HERE>?page=Browse) — no account needed, apply with your institute email |
-| 🏢 **Startup** | [**Post a role →**](<PASTE-YOUR-PORTAL-URL-HERE>?page=StartupPortal) — CTIE issues your login |
-| 📋 **Anyone with an Application ID** | [**Track your application →**](<PASTE-YOUR-PORTAL-URL-HERE>?page=Track) |
+| 🎓 **Student** | [**Browse open roles →**](https://script.google.com/macros/s/AKfycbwrLZxK2sq0H4RjGqrzGEKIuH7jP-DnJZj7eYfrjR1GlL77JhQGbSETpjKUUoz866KJuA/exec?page=Browse) — no account needed, apply with your institute email |
+| 🏢 **Startup** | [**Post a role →**](https://script.google.com/macros/s/AKfycbwrLZxK2sq0H4RjGqrzGEKIuH7jP-DnJZj7eYfrjR1GlL77JhQGbSETpjKUUoz866KJuA/exec?page=StartupPortal) — CTIE issues your login |
+| 📋 **Anyone with an Application ID** | [**Track your application →**](https://script.google.com/macros/s/AKfycbwrLZxK2sq0H4RjGqrzGEKIuH7jP-DnJZj7eYfrjR1GlL77JhQGbSETpjKUUoz866KJuA/exec?page=Track) |
 | 🧭 **Curious how it all works** | [**See the full walkthrough →**](docs/index.html) |
-
-*(Repo maintainer: replace `<PASTE-YOUR-PORTAL-URL-HERE>` above with your deployed `/exec` URL before publishing.)*
 
 ## What it does
 
@@ -22,17 +20,11 @@ KLE-CTIE connects engineering and management students with CTIE-incubated startu
 - **CTIE** gets real-time oversight of every startup's hiring activity, automatic SLA enforcement (nothing sits unanswered for long — the system nudges, then auto-closes if a startup goes quiet), and exportable reports.
 - Already open to students from **any** institute, not just KLE — any institutional email is accepted, only personal addresses (Gmail, Yahoo, etc.) are excluded.
 
-Built entirely on Google Sheets + Apps Script — the data never leaves the Institute's own Google Workspace, no third-party server involved.
-
 <br>
-
-# ⛔ Stop here unless you're building or deploying this
-
-Everything above is for people using the portal. Everything below is source code documentation for developers.
 
 ---
 
-## For developers
+## For developers & maintainers
 
 ### Setup & deployment
 
