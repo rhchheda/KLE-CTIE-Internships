@@ -1,0 +1,22 @@
+# clasp -- ties this checkout to one specific Apps Script project/deployment.
+# Each developer creates their own via `clasp clone <scriptId>`.
+.clasp.json
+.clasprc.json
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local scratch/test copies made while iterating
+/test_run/
+/orig_check/
+
+# Real startup/founder contact data (names, emails, phone numbers) --
+# never belongs in the public repo. ImportRealStartups.gs itself has the
+# real emails/phone numbers hardcoded in it (it must still be pushed to
+# Apps Script via clasp, which uses .claspignore, not this file) -- so it
+# is excluded here even though clasp still deploys it privately.
+*.xls
+*.xlsx
+ImportRealStartups.gs
