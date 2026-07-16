@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Track Application -- KLE-CTIE</title>
+<style>
+/* ?? RESET & BASE ?????????????????????????????????????????? */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,sans-serif;min-height:100vh;color:#1a1a2e}
+
+/* ?? TOPBAR (shared) ??????????????????????????????????????? */
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;
+  border-bottom:2px solid #C8973A}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-divider{width:1px;height:26px;background:rgba(200,151,58,0.3);flex-shrink:0}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A;line-height:1.2}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{background:rgba(200,151,58,0.1);border:1px solid rgba(200,151,58,0.35);
+  color:#C8973A;padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:all .2s;font-family:Arial;white-space:nowrap}
+.tb-btn:hover{background:rgba(200,151,58,0.22)}
+.tb-btn-ghost{background:none;border:1px solid rgba(255,255,255,0.15);
+  color:#8A9BB0;padding:5px 14px;border-radius:20px;font-size:11px;
+  cursor:pointer;text-decoration:none;transition:all .2s;font-family:Arial}
+.tb-btn-ghost:hover{border-color:rgba(255,255,255,0.3);color:#F7F3EC}
+
+/* ?? COMMON FORM ELEMENTS ?????????????????????????????????? */
+.fg{margin-bottom:12px}
+.fg label{display:block;font-size:10px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:#666;margin-bottom:5px}
+.req{color:#E24B4A}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;
+  border:1.5px solid #e0e4ea;border-radius:8px;font-size:13px;color:#1a1a2e;
+  outline:none;font-family:Arial;transition:all .2s;background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#C8973A;
+  box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+.fg input.err,.fg select.err,.fg textarea.err{border-color:#E24B4A}
+.fg .hint{font-size:10px;color:#888;margin-top:4px;line-height:1.5}
+.fg .err-msg{font-size:10px;color:#E24B4A;margin-top:3px;display:none}
+.fg .err-msg.show{display:block}
+.fg textarea{resize:vertical;min-height:80px;line-height:1.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ?? BUTTONS ??????????????????????????????????????????????? */
+.btn-gold{background:linear-gradient(135deg,#C8973A,#A06B18);border:none;
+  color:#0B1F3A;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:Arial;transition:all .2s;display:inline-flex;
+  align-items:center;gap:6px}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(200,151,58,0.35);transform:translateY(-1px)}
+.btn-gold:disabled{background:#ccc;color:#888;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-outline{background:none;border:1.5px solid #e0e4ea;color:#444;padding:9px 18px;
+  border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial;transition:all .2s}
+.btn-outline:hover{border-color:#C8973A;color:#C8973A}
+.btn-danger{background:none;border:1.5px solid rgba(226,75,74,0.3);color:#E24B4A;
+  padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:Arial}
+.btn-danger:hover{background:rgba(226,75,74,0.08)}
+
+/* ?? CARDS ????????????????????????????????????????????????? */
+.card{background:#fff;border:1px solid #e8eaed;border-radius:14px;padding:20px 22px}
+.card-dark{background:#0B1F3A;border:1px solid rgba(200,151,58,0.2);border-radius:14px;padding:20px 22px}
+.card-title{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center}
+.card-title a{font-size:11px;color:#C8973A;text-decoration:none;font-weight:400}
+
+/* ?? BADGES ???????????????????????????????????????????????? */
+.badge{display:inline-block;font-size:10px;padding:2px 9px;border-radius:10px;font-weight:700;white-space:nowrap}
+.b-gold{background:#FFF3DE;color:#854F0B;border:1px solid #EF9F27}
+.b-green{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.b-blue{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.b-red{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+.b-gray{background:#f4f6f8;color:#666;border:1px solid #ddd}
+.b-purple{background:#F3E5F5;color:#4A148C;border:1px solid #CE93D8}
+.b-teal{background:#E0F2F1;color:#004D40;border:1px solid #80CBC4}
+
+/* ?? STATUS MAP ???????????????????????????????????????????? */
+/* Used to colour application status consistently */
+.s-applied{color:#854F0B;background:#FFF3DE;border-color:#EF9F27}
+.s-shortlisted{color:#0D47A1;background:#E3F2FD;border-color:#90CAF9}
+.s-scheduled{color:#4A148C;background:#F3E5F5;border-color:#CE93D8}
+.s-held{color:#004D40;background:#E0F2F1;border-color:#80CBC4}
+.s-pending-otp{color:#E65100;background:#FFF3E0;border-color:#FFB74D}
+.s-selected{color:#1B5E20;background:#E8F5E9;border-color:#81C784}
+.s-not-selected{color:#B71C1C;background:#FFEBEE;border-color:#EF9A9A}
+.s-closed{color:#666;background:#f4f6f8;border-color:#ddd}
+.s-completed{color:#1B5E20;background:#E8F5E9;border-color:#81C784}
+
+/* ?? SPINNER ??????????????????????????????????????????????? */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(200,151,58,.2);
+  border-top-color:#C8973A;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+.spin-w{border:2px solid rgba(255,255,255,.2);border-top-color:#fff}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ?? TOAST ????????????????????????????????????????????????? */
+.toast{position:fixed;bottom:70px;right:18px;z-index:9998;padding:12px 16px;
+  border-radius:10px;font-size:12px;font-weight:600;max-width:320px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);display:none;line-height:1.5}
+.toast.show{display:block;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(10px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast-ok{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.toast-err{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+.toast-info{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+body{background:#f0f4f8;display:flex;flex-direction:column;min-height:100vh}
+.main{flex:1;max-width:680px;margin:0 auto;padding:24px 16px 80px;width:100%}
+
+/* Lookup box */
+.lookup-card{background:#fff;border-radius:14px;padding:24px;margin-bottom:20px;
+  border:1px solid #e8eaed;text-align:center}
+.lookup-card h2{font-size:18px;font-weight:700;color:#0B1F3A;margin-bottom:6px}
+.lookup-card p{font-size:13px;color:#888;margin-bottom:18px}
+.lookup-row{display:flex;gap:10px;max-width:440px;margin:0 auto}
+.lookup-row input{flex:1;padding:10px 14px;border:1.5px solid #e0e4ea;border-radius:8px;
+  font-size:14px;font-family:monospace;outline:none;letter-spacing:0.05em}
+.lookup-row input:focus{border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+
+/* Timeline */
+.timeline-card{background:#fff;border-radius:14px;padding:22px;border:1px solid #e8eaed;margin-bottom:16px}
+.tc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:10px}
+.tc-startup{font-size:16px;font-weight:700;color:#0B1F3A}
+.tc-role{font-size:13px;color:#888;margin-top:2px}
+.appid-pill{font-family:monospace;font-size:11px;background:#f4f6f8;
+  border:1px solid #e8eaed;border-radius:6px;padding:3px 10px;color:#444;white-space:nowrap}
+
+/* Stage timeline */
+.stages{display:flex;flex-direction:column;gap:0}
+.stage-row{display:flex;gap:14px;padding:10px 0;position:relative}
+.stage-row::before{content:'';position:absolute;left:15px;top:42px;
+  width:1px;height:calc(100% - 22px);background:#e8eaed}
+.stage-row:last-child::before{display:none}
+.stage-circle{width:30px;height:30px;border-radius:50%;flex-shrink:0;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  z-index:1;position:relative}
+.sc-done{background:#0B1F3A;color:#C8973A}
+.sc-active{background:#C8973A;color:#0B1F3A;box-shadow:0 0 0 4px rgba(200,151,58,0.2)}
+.sc-pending{background:#f4f6f8;color:#aaa;border:1.5px solid #e8eaed}
+.sc-warning{background:#FFF3E0;color:#E65100;border:1.5px solid #FFB74D}
+.sc-danger{background:#FFEBEE;color:#C62828;border:1.5px solid #FFCDD2}
+.stage-body{flex:1}
+.stage-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+.stage-title.pending{color:#aaa}
+.stage-meta{font-size:11px;color:#888;line-height:1.5}
+.stage-detail{font-size:12px;color:#444;margin-top:4px;line-height:1.6}
+.stage-warn{font-size:11px;color:#E65100;margin-top:4px;font-weight:600}
+
+/* Interview details box */
+.interview-box{background:#F3F7FF;border:1px solid #C5D9F5;border-radius:10px;
+  padding:14px 16px;margin:8px 0 0}
+.ib-row{display:flex;gap:12px;align-items:center;font-size:12px;margin-bottom:5px}
+.ib-row:last-child{margin-bottom:0}
+.ib-label{color:#888;width:70px;flex-shrink:0}
+.ib-val{color:#1a1a2e;font-weight:600}
+.ib-link{color:#1565C0;text-decoration:none;word-break:break-all}
+.ib-link:hover{text-decoration:underline}
+
+/* Reschedule counter */
+.reschedule-meter{background:#f8f9fa;border-radius:8px;padding:10px 12px;margin-top:8px;
+  display:flex;align-items:center;gap:10px;font-size:12px}
+.rm-label{color:#888;flex:1}
+.rm-dots{display:flex;gap:5px}
+.rm-dot{width:12px;height:12px;border-radius:50%}
+.rm-used{background:#E24B4A}
+.rm-free{background:#e8eaed}
+
+/* CTA box */
+.cta-box{background:#0B1F3A;border-radius:14px;padding:20px;text-align:center;
+  margin-bottom:16px}
+.cta-box p{font-size:13px;color:#8A9BB0;margin-bottom:12px;line-height:1.6}
+.cta-box a{display:inline-block;background:#C8973A;color:#0B1F3A;padding:10px 22px;
+  border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;margin:4px}
+
+/* Resume card */
+.resume-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px}
+.resume-view{background:#f4f6f8;color:#0B1F3A;padding:7px 14px;border-radius:7px;
+  font-size:12px;font-weight:700;text-decoration:none}
+.resume-view:hover{background:#e8eaed}
+.resume-meta{font-size:11px;color:#888}
+.resume-upload-btn{background:none;border:1.5px solid #e0e4ea;color:#444;
+  padding:7px 14px;border-radius:7px;font-size:12px;cursor:pointer;font-family:Arial}
+.resume-upload-btn:hover{border-color:#C8973A;color:#C8973A}
+.resume-upload-btn:disabled{opacity:0.5;cursor:not-allowed}
+.cta-box a:hover{opacity:0.9}
+
+/* Not found */
+.not-found{text-align:center;padding:40px;display:none}
+.not-found.show{display:block}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE" onerror="this.style.display='none'">
+    <div class="tb-divider"></div>
+    <div>
+      <div class="tb-title">Track Application</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <?!= (from === 'admin') ? '<button class="tb-btn" onclick="backToAdmin()" type="button">&#8592; Back to Admin</button>' : '' ?>
+    <button class="tb-btn" onclick="navPage('Browse')" type="button">Browse Roles</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Lookup box -->
+  <div class="lookup-card">
+    <h2>Track your application</h2>
+    <p>Enter your Application ID from the confirmation email</p>
+    <div class="lookup-row">
+      <input type="text" id="appIdInput" placeholder="APP-2025-0001"
+        value="<?= appId ?>" oninput="this.value=this.value.toUpperCase()"
+        onkeydown="if(event.key==='Enter')lookupApp()">
+      <button class="btn-gold" onclick="lookupApp()">Track</button>
+    </div>
+  </div>
+
+  <!-- Not found -->
+  <div class="not-found" id="notFound">
+    <div style="font-size:36px;opacity:0.4;margin-bottom:8px">&#128269;</div>
+    <div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px">Application not found</div>
+    <div style="font-size:12px;color:#888">Check your email for the correct Application ID</div>
+  </div>
+
+  <!-- Timeline card -->
+  <div id="trackCard" style="display:none">
+    <div class="timeline-card">
+      <div class="tc-header">
+        <div>
+          <div class="tc-startup" id="tStartup">--</div>
+          <div class="tc-role" id="tRole">--</div>
+        </div>
+        <div class="appid-pill" id="tAppId">--</div>
+      </div>
+      <div class="stages" id="stagesWrap"></div>
+    </div>
+
+    <div class="timeline-card" id="resumeCard" style="display:none">
+      <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:10px">&#128196; Resume</div>
+      <div id="resumeContent"></div>
+    </div>
+
+    <div id="ctaArea"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+function backToAdmin() { window.top.location.href = EXEC_URL + '?page=Admin'; }
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+var MAX_RS   = 2;
+
+// Auto-lookup if appId in URL
+(function() {
+  var v = document.getElementById('appIdInput').value.trim();
+  if (v) lookupApp();
+})();
+
+function lookupApp() {
+  var id = document.getElementById('appIdInput').value.trim().toUpperCase();
+  if (!id) { toast('err','Enter an Application ID'); return; }
+
+  document.getElementById('notFound').classList.remove('show');
+  document.getElementById('trackCard').style.display = 'none';
+  document.getElementById('appIdInput').disabled = true;
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      document.getElementById('appIdInput').disabled = false;
+      if (!r || !r.ok) {
+        document.getElementById('notFound').classList.add('show');
+        return;
+      }
+      renderTrack(r);
+    })
+    .withFailureHandler(function(e) {
+      document.getElementById('appIdInput').disabled = false;
+      toast('err','Error: '+e.message);
+    })
+    .getApplicationStatus(id);
+}
+
+function renderTrack(d) {
+  document.getElementById('tStartup').textContent = d.startupName||'--';
+  document.getElementById('tRole').textContent    = d.roleTitle  ||'--';
+  document.getElementById('tAppId').textContent   = d.appId      ||'--';
+
+  var rCount = parseInt(d.rescheduleCount||0);
+  var status = d.status||'Applied';
+
+  // Build stage list
+  var stages = [
+    {
+      key:   'applied',
+      title: 'Application submitted',
+      done:  true,
+      date:  d.appliedAt,
+      detail:'Your application was received. Confirmation sent to both your emails.'
+    },
+    {
+      key:    'review',
+      title:  'Startup reviewing',
+      done:   statusGte(status,'Shortlisted'),
+      active: status==='Applied',
+      warn:   false,
+      detail: statusGte(status,'Shortlisted')
+        ? 'You were shortlisted on '+d.shortlistedAt
+        : 'The startup is reviewing applications. SLA: 7 working days.'
+    },
+    {
+      key:    'interview',
+      title:  'Interview scheduling',
+      done:   statusGte(status,'Interview Scheduled'),
+      active: status==='Shortlisted',
+      detail: d.interviewDate
+        ? 'Interview on '+fmtDateNice(d.interviewDate)+' at '+fmtTimeNice(d.interviewTime)+' IST'
+        : status==='Shortlisted' ? 'Startup is setting up interview slots.' : ''
+    },
+    {
+      key:    'outcome',
+      title:  'Interview & outcome',
+      done:   statusGte(status,'Offer Pending OTP') || status==='Not Selected',
+      active: status==='Interview Scheduled' || status==='Interview Held -- Outcome Pending',
+      warn:   status==='Interview Held -- Outcome Pending',
+      detail: status==='Interview Held -- Outcome Pending'
+        ? 'Interview done. Awaiting startup decision (SLA: 48 hours).'
+        : statusGte(status,'Offer Pending OTP') ? 'You have been selected!'
+        : status==='Not Selected' ? 'Startup has reviewed and sent their decision.'
+        : ''
+    },
+    {
+      key:    'confirm',
+      title:  'OTP confirmation',
+      done:   status==='Selected' || status==='Completed',
+      active: status==='Offer Pending OTP',
+      detail: status==='Offer Pending OTP'
+        ? 'Check your institute email for the OTP to confirm acceptance.'
+        : status==='Selected'||status==='Completed' ? 'Confirmed on '+d.confirmedAt : ''
+    },
+    {
+      key:    'intern',
+      title:  'Active internship',
+      done:   status==='Completed',
+      active: status==='Selected',
+      detail: status==='Selected' ? 'Internship in progress. '+(d.internStart||'')
+        : status==='Completed' ? 'Completed on '+d.internEnd : ''
+    },
+    {
+      key:    'cert',
+      title:  'Completion & certificate',
+      done:   status==='Completed',
+      active: false,
+      detail: status==='Completed'
+        ? 'Your certificate is ready to view and print below.' : 'After successful completion.'
+    }
+  ];
+
+  // Closed states
+  if (status.indexOf('Closed')>=0 || status==='Not Selected') {
+    stages = stages.slice(0, stages.findIndex(function(s){return !s.done;})+1);
+    stages.push({
+      key:'closed', title: status, done:false, active:false,
+      detail: status==='Not Selected'
+        ? 'You are welcome to apply to other open roles.'
+        : 'Application closed. You may apply to other roles.',
+      isDanger: true
+    });
+  }
+
+  document.getElementById('stagesWrap').innerHTML = stages.map(function(s, i) {
+    var circleClass = s.isDanger ? 'sc-danger'
+      : s.warn ? 'sc-warning'
+      : s.done ? 'sc-done'
+      : s.active ? 'sc-active' : 'sc-pending';
+    var icon = s.done ? '&#10003;' : s.isDanger ? '&#10005;' : String(i+1);
+
+    var interviewBox = '';
+    if (s.key==='interview' && d.interviewDate) {
+      interviewBox = '<div class="interview-box">'
+        +'<div class="ib-row"><span class="ib-label">Date</span><span class="ib-val">'+esc(fmtDateNice(d.interviewDate))+'</span></div>'
+        +'<div class="ib-row"><span class="ib-label">Time</span><span class="ib-val">'+esc(fmtTimeNice(d.interviewTime))+' IST</span></div>'
+        +'<div class="ib-row"><span class="ib-label">Mode</span><span class="ib-val">'+esc(d.interviewMode||'Online')+'</span></div>'
+        +(d.meetLink?interviewLinkRow(d.interviewMode, d.meetLink):'')
+        +'</div>';
+    }
+
+    var rsMeter = '';
+    if (rCount>0 && (s.key==='interview'||s.key==='outcome')) {
+      var dots = '';
+      for(var j=0;j<MAX_RS;j++) dots+='<div class="rm-dot '+(j<rCount?'rm-used':'rm-free')+'"></div>';
+      rsMeter = '<div class="reschedule-meter">'
+        +'<span class="rm-label">Reschedules used</span>'
+        +'<div class="rm-dots">'+dots+'</div>'
+        +'<span style="font-size:11px;color:'+(rCount>=MAX_RS?'#C62828':'#888')+'">'+rCount+'/'+MAX_RS
+        +(rCount>=MAX_RS?' -- limit reached':'')+'</span>'
+        +'</div>';
+    }
+
+    return '<div class="stage-row">'
+      +'<div class="stage-circle '+circleClass+'">'+icon+'</div>'
+      +'<div class="stage-body">'
+      +'<div class="stage-title'+(s.active||s.done?'':' pending')+'">'+esc(s.title)+'</div>'
+      +(s.date?'<div class="stage-meta">'+esc(s.date)+'</div>':'')
+      +(s.detail?'<div class="stage-detail">'+esc(s.detail)+'</div>':'')
+      +(s.warn?'<div class="stage-warn">&#9888; Awaiting startup action</div>':'')
+      +interviewBox+rsMeter
+      +'</div></div>';
+  }).join('');
+
+  // CTA area
+  var cta = '';
+  if (status==='Offer Pending OTP') {
+    cta = '<div class="cta-box">'
+      +'<p>Check your institute email for the 6-digit OTP. Click below to enter it and confirm your internship.</p>'
+      +'<a href="'+EXEC_URL+'?page=OTPVerify&appId='+esc(d.appId)+'" target="_top">Confirm Acceptance with OTP &#8594;</a>'
+      +'</div>';
+  } else if (status==='Completed') {
+    cta = '<div class="cta-box">'
+      +'<p>Your internship is complete. View, print, or save your certificate as a PDF.</p>'
+      +'<a href="javascript:void(0)" onclick="viewCertificate()">View / Print Certificate &#8594;</a>'
+      +'</div>';
+  } else if (status==='Applied'||status==='Shortlisted'||status==='Interview Scheduled') {
+    cta = '<div style="text-align:center;font-size:12px;color:#888;padding:8px">'
+      +'Questions? Contact <span>ctie [at] kletech.ac.in</span>'
+      +'</div>';
+  }
+  document.getElementById('ctaArea').innerHTML = cta;
+  document.getElementById('trackCard').style.display = 'block';
+  renderResumeCard(d);
+}
+
+var CURRENT_APP_ID = '';
+function renderResumeCard(d) {
+  CURRENT_APP_ID = d.appId || '';
+  var card = document.getElementById('resumeCard');
+  var body = document.getElementById('resumeContent');
+  card.style.display = 'block';
+
+  var viewLink = d.resumeUrl
+    ? '<a class="resume-view" href="' + esc(d.resumeUrl) + '" target="_blank">View current resume &#8594;</a>'
+    : '<span class="resume-meta">No resume on file yet.</span>';
+  var updatedNote = d.resumeUpdatedAt
+    ? '<div class="resume-meta" style="margin-top:6px">Last updated: ' + esc(d.resumeUpdatedAt) + '</div>' : '';
+
+  var uploadRow = d.canUpdateResume
+    ? '<div style="margin-top:10px">'
+      + '<input type="file" id="resumeReupload" accept=".pdf,.doc,.docx" style="display:none" onchange="handleResumeReupload(this)">'
+      + '<button class="resume-upload-btn" id="resumeReuploadBtn" type="button" '
+      + 'onclick="document.getElementById(\'resumeReupload\').click()">&#8593; Upload newer resume</button>'
+      + '<span class="resume-meta" id="resumeReuploadStatus" style="margin-left:8px"></span>'
+      + '</div>'
+    : '<div class="resume-meta" style="margin-top:8px">Resume updates are no longer accepted at this stage.</div>';
+
+  body.innerHTML = '<div class="resume-row">' + viewLink + '</div>' + updatedNote + uploadRow;
+}
+
+function handleResumeReupload(input) {
+  var file = input.files[0];
+  if (!file) return;
+  if (file.size > 5*1024*1024) { toast('err','File too large. Maximum 5MB.'); return; }
+  var allowed = ['application/pdf','application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if (allowed.indexOf(file.type)<0) { toast('err','Only PDF, DOC, or DOCX files accepted'); return; }
+
+  var btn    = document.getElementById('resumeReuploadBtn');
+  var status = document.getElementById('resumeReuploadStatus');
+  btn.disabled = true;
+  status.textContent = 'Uploading...';
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var b64 = e.target.result.split(',')[1];
+    google.script.run
+      .withSuccessHandler(function(r) {
+        btn.disabled = false;
+        if (r && r.ok) {
+          status.textContent = '';
+          toast('ok', r.msg || 'Resume updated.');
+          lookupApp();
+        } else {
+          status.textContent = '';
+          toast('err', (r && r.msg) || 'Upload failed. Try again.');
+        }
+      })
+      .withFailureHandler(function(e) {
+        btn.disabled = false;
+        status.textContent = '';
+        toast('err', 'Error: ' + e.message);
+      })
+      .updateResume(CURRENT_APP_ID, b64, file.name, file.type);
+  };
+  reader.readAsDataURL(file);
+}
+
+function statusGte(current, threshold) {
+  var order = ['Applied','Shortlisted','Interview Scheduled','Interview Held -- Outcome Pending',
+    'Offer Pending OTP','Selected','Completed'];
+  return order.indexOf(current) >= order.indexOf(threshold);
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// Server sends interview date/time as plain "yyyy-MM-dd" / "HH:mm" (IST) --
+// these render that as "17 Jul 2026" / "10:00 AM" for display.
+function fmtDateNice(iso) {
+  if (!iso) return '';
+  var p = String(iso).split('-');
+  if (p.length !== 3) return iso;
+  var d = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+  if (isNaN(d.getTime())) return iso;
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+}
+function fmtTimeNice(hhmm) {
+  if (!hhmm) return '';
+  var p = String(hhmm).split(':');
+  if (p.length < 2) return hhmm;
+  var h = parseInt(p[0],10), m = p[1];
+  if (isNaN(h)) return hhmm;
+  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h12  = h % 12; if (h12 === 0) h12 = 12;
+  return h12+':'+m+' '+ampm;
+}
+// The interview's one free-text detail field means something different per
+// mode -- a clickable Meet link, a venue to show up at, or a callback
+// number -- so render it accordingly instead of always as "Join meeting".
+function interviewLinkRow(mode, value) {
+  if (mode==='In-person') return '<div class="ib-row"><span class="ib-label">Venue</span><span class="ib-val">'+esc(value)+'</span></div>';
+  if (mode==='Phone') return '<div class="ib-row"><span class="ib-label">Callback Number</span><span class="ib-val">'+esc(value)+'</span></div>';
+  return '<div class="ib-row"><span class="ib-label">Meet</span><a class="ib-link" href="'+esc(value)+'" target="_blank">Join meeting</a></div>';
+}
+function viewCertificate() {
+  if (!CURRENT_APP_ID) { toast('err','Application ID not found'); return; }
+  // Open the tab synchronously (in direct response to the click) so browsers
+  // don't treat it as an unsolicited popup once the async response arrives.
+  var certWin = window.open('', '_blank');
+  google.script.run
+    .withSuccessHandler(function(r){
+      if (r && r.ok && r.html) { certWin.document.open(); certWin.document.write(r.html); certWin.document.close(); }
+      else { if (certWin) certWin.close(); toast('err', r ? r.msg : 'Certificate not available'); }
+    })
+    .withFailureHandler(function(e){ if (certWin) certWin.close(); toast('err', e.message); })
+    .getCertificate(CURRENT_APP_ID);
+}
+function toast(type,msg){
+  var t=document.getElementById('toast');
+  t.className='toast toast-'+(type==='ok'?'ok':type==='err'?'err':'info')+' show';
+  t.textContent=msg;clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},4000);
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
