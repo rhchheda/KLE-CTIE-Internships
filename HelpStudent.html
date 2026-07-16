@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Guide -- KLE-CTIE Internship Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh;color:#1a1a2e}
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;border-bottom:2px solid #C8973A;
+  position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-div{width:1px;height:26px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{color:#8A9BB0;border:1px solid rgba(255,255,255,0.15);background:none;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;font-family:Arial}
+.tb-btn:hover{color:#F7F3EC}
+
+/* Hero */
+.hero{background:#0B1F3A;padding:40px 24px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(200,151,58,0.15);
+  border:1px solid rgba(200,151,58,0.4);border-radius:20px;
+  padding:4px 16px;font-size:11px;font-weight:700;color:#C8973A;margin-bottom:14px}
+.hero h1{font-size:26px;font-weight:300;color:#F7F3EC;margin-bottom:8px}
+.hero h1 strong{color:#C8973A;font-weight:700}
+.hero p{font-size:13px;color:#8A9BB0;max-width:480px;margin:0 auto}
+
+/* Layout */
+.main{max-width:800px;margin:0 auto;padding:32px 16px 80px}
+
+/* Nav pills */
+.nav-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.pill{padding:7px 16px;border-radius:20px;border:1.5px solid #e0e4ea;
+  font-size:12px;cursor:pointer;font-family:Arial;background:#fff;
+  color:#555;transition:all .15s;text-decoration:none}
+.pill:hover,.pill.on{background:#0B1F3A;color:#C8973A;border-color:#0B1F3A;font-weight:700}
+
+/* Section */
+.section{margin-bottom:32px}
+.sec-title{font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;padding-bottom:10px;
+  border-bottom:2px solid #C8973A}
+.sec-icon{font-size:22px}
+
+/* Step cards */
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{background:#fff;border-radius:12px;padding:16px 18px;
+  border:1px solid #e8eaed;display:flex;gap:14px;align-items:flex-start}
+.step-num{width:32px;height:32px;border-radius:50%;background:#0B1F3A;
+  color:#C8973A;font-size:13px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.step-body p{font-size:13px;color:#555;line-height:1.6}
+.step-body .note{font-size:11px;color:#888;margin-top:5px;font-style:italic}
+
+/* Info boxes */
+.info-box{border-radius:10px;padding:14px 16px;margin-bottom:10px;
+  font-size:13px;line-height:1.7}
+.ib-blue{background:#E3F2FD;border:1px solid #90CAF9;color:#1565C0}
+.ib-green{background:#E8F5E9;border:1px solid #81C784;color:#1B5E20}
+.ib-amber{background:#FFF8E1;border:1px solid #FFD54F;color:#5D4037}
+.ib-red{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.ib-teal{background:#E0F2F1;border:1px solid #80CBC4;color:#004D40}
+strong.lbl{display:block;font-weight:700;margin-bottom:4px}
+
+/* FAQ */
+.faq-item{background:#fff;border-radius:10px;border:1px solid #e8eaed;
+  margin-bottom:8px;overflow:hidden}
+.faq-q{padding:13px 16px;font-size:13px;font-weight:700;color:#1a1a2e;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q:hover{background:#fafafa}
+.faq-arrow{font-size:11px;color:#888;transition:transform .2s}
+.faq-a{padding:0 16px;font-size:13px;color:#555;line-height:1.7;
+  max-height:0;overflow:hidden;transition:all .3s}
+.faq-item.open .faq-a{padding:0 16px 13px;max-height:300px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+
+/* Timeline */
+.timeline{position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;
+  width:1px;background:#e8eaed}
+.tl-item{position:relative;margin-bottom:14px}
+.tl-dot{width:14px;height:14px;border-radius:50%;background:#C8973A;
+  position:absolute;left:-24px;top:3px;border:2px solid #fff}
+.tl-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px}
+.tl-desc{font-size:12px;color:#666;line-height:1.5}
+.tl-sla{font-size:11px;color:#E65100;font-weight:700;margin-top:2px}
+
+/* CTA */
+.cta-box{background:#0B1F3A;border-radius:14px;padding:24px;text-align:center;margin-top:24px}
+.cta-box h3{font-size:16px;font-weight:700;color:#C8973A;margin-bottom:8px}
+.cta-box p{font-size:13px;color:#8A9BB0;margin-bottom:16px}
+.cta-btn{display:inline-block;background:#C8973A;color:#0B1F3A;
+  padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;
+  text-decoration:none;margin:4px}
+
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+@media(max-width:600px){.nav-pills{gap:5px}.hero h1{font-size:20px}}
+.scroll-top{position:fixed;bottom:56px;right:18px;z-index:9998;width:36px;height:36px;border-radius:50%;background:#0B1F3A;border:1.5px solid rgba(200,151,58,.5);color:#C8973A;font-size:16px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3);font-family:Arial}.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div>
+      <div class="tb-title">Student Guide</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('Browse')" type="button">Browse Roles</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Student Guide</div>
+  <h1>Everything you need to know about <strong>applying</strong></h1>
+  <p>Read this once. You will know exactly what to expect at every stage.</p>
+</div>
+
+<div class="main">
+
+  <!-- Nav -->
+  <div class="nav-pills">
+    <a href="#how" class="pill on">How it works</a>
+    <a href="#email" class="pill">Institute email</a>
+    <a href="#otp" class="pill">OTP explained</a>
+    <a href="#track" class="pill">Tracking</a>
+    <a href="#sla" class="pill">Your rights</a>
+    <a href="#faq" class="pill">FAQ</a>
+  </div>
+
+  <!-- How it works -->
+  <div class="section" id="how">
+    <div class="sec-title">
+      <span class="sec-icon">&#127919;</span>How the process works
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Browse and apply</h3>
+          <p>No account needed to browse. Find a role that interests you and click Apply.
+            Fill in your details, upload your resume (PDF, max 5MB), and write 2-3 sentences
+            on why you are interested. Submit.</p>
+          <p class="note">You get an Application ID immediately. Save it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Startup reviews your application</h3>
+          <p>The startup sees your resume and application inline. They will shortlist or pass
+            within 7 working days. If shortlisted, you get an email on both your addresses.</p>
+          <p class="note">If no action within 14 days, your application closes automatically.
+            You will be notified and are free to apply elsewhere.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Interview gets scheduled</h3>
+          <p>The startup sets a date, time, and mode (online/in-person). You receive a calendar
+            invite to both your emails with all details including the Google Meet link if online.</p>
+          <p class="note">Join 2 minutes early. Keep your resume ready.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Outcome within 48 hours</h3>
+          <p>After your interview, the startup must enter their decision within 48 hours.
+            You will see the status change in your tracker. If selected, you proceed to the
+            OTP confirmation step.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Confirm acceptance with OTP</h3>
+          <p>If selected, a 6-digit OTP is sent to your <strong>institute email only</strong>.
+            Enter it on the confirmation page within 10 minutes to confirm your acceptance.
+            This is your binding confirmation -- no paperwork needed.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h3>Complete your internship</h3>
+          <p>Work with the startup. They log your weekly progress. When done, they mark it
+            complete and you receive a verified Internship Completion Certificate on both
+            your email addresses.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Institute email -->
+  <div class="section" id="email">
+    <div class="sec-title">
+      <span class="sec-icon">&#128274;</span>Why we need your institute email
+    </div>
+    <div class="info-box ib-blue">
+      <strong class="lbl">What is an institute email?</strong>
+      Your institute email is the one provided by your college or university.
+      It typically ends in .edu.in, .ac.in, or the institution's own domain.
+      Examples: <strong>yourname@kletech.ac.in</strong>, <strong>rollno@vtu.edu.in</strong>
+    </div>
+    <div class="info-box ib-green">
+      <strong class="lbl">Why we require it (not Gmail or Yahoo)</strong>
+      Your institute email proves you are currently enrolled. Anyone can create a Gmail account.
+      Only a current student has access to a valid institute email. This protects startups
+      from fake applications and protects you -- it ensures fair competition.
+    </div>
+    <div class="info-box ib-amber">
+      <strong class="lbl">What your personal email is used for</strong>
+      We also collect your personal email (Gmail etc.) separately. This is used only for
+      post-graduation contact -- when your institute email expires after you graduate,
+      startups can still reach you. Your completion certificate also goes to both addresses.
+    </div>
+    <div class="info-box ib-red">
+      <strong class="lbl">The OTP always goes to institute email only</strong>
+      When a startup selects you, the 6-digit confirmation OTP is sent exclusively to your
+      institute email. This ensures only you -- not someone with just your personal email --
+      can confirm the offer. Your personal email gets a notification to check the institute inbox.
+    </div>
+  </div>
+
+  <!-- OTP explained -->
+  <div class="section" id="otp">
+    <div class="sec-title">
+      <span class="sec-icon">&#128272;</span>The OTP confirmation -- what it is and why
+    </div>
+    <div class="info-box ib-teal">
+      <strong class="lbl">What is an OTP?</strong>
+      OTP stands for One-Time Password. It is a 6-digit code sent to your institute email
+      when a startup selects you. You enter it on a confirmation page. This is how you
+      formally accept the internship offer -- no physical signature, no PDF form.
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Check your institute email inbox (and spam)</h3>
+          <p>The OTP email comes from ctie [at] kletech.ac.in with subject line containing
+            "Action required: Confirm your internship offer". Check spam if you don't see it.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Click the confirmation link in the email</h3>
+          <p>The email contains a large "Confirm Acceptance" button that takes you to
+            the OTP entry page. You can also go to the Track page and follow the prompt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Enter the 6 digits within 10 minutes</h3>
+          <p>The OTP is valid for only 10 minutes. If it expires, use the Resend button on
+            the verification page -- a new OTP is sent. You have 5 attempts before the code
+            locks. If locked, the startup needs to re-select you.</p>
+        </div>
+      </div>
+    </div>
+    <div class="info-box ib-red" style="margin-top:12px">
+      <strong class="lbl">Security warning</strong>
+      KLE-CTIE will NEVER call you, WhatsApp you, or message you asking for your OTP.
+      Do not share the OTP with anyone -- not even the startup. The OTP is for your eyes only.
+    </div>
+  </div>
+
+  <!-- Tracking -->
+  <div class="section" id="track">
+    <div class="sec-title">
+      <span class="sec-icon">&#128202;</span>Tracking your application
+    </div>
+    <p style="font-size:13px;color:#555;margin-bottom:16px;line-height:1.7">
+      Go to <strong>Track Application</strong> on the portal and enter your Application ID.
+      You can see the full timeline of your application at any stage.
+    </p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Applied</div>
+        <div class="tl-desc">Your application is submitted. Startup has been notified.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Shortlisted</div>
+        <div class="tl-desc">Startup has reviewed and shortlisted you. Interview being arranged.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-title">Interview Scheduled</div>
+        <div class="tl-desc">Date, time, mode, and Meet link visible in tracker.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#E65100"></div>
+        <div class="tl-title">Interview Held -- Outcome Pending</div>
+        <div class="tl-desc">Interview was held. Startup has 48 hours to enter decision.</div>
+        <div class="tl-sla">If no decision in 96 hours, CTIE is automatically alerted.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#C8973A"></div>
+        <div class="tl-title">Offer Pending OTP</div>
+        <div class="tl-desc">You are selected! Check your institute email for the OTP.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#1D9E75"></div>
+        <div class="tl-title">Selected</div>
+        <div class="tl-desc">OTP confirmed. Internship is active. Startup will contact you.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#1D9E75"></div>
+        <div class="tl-title">Completed</div>
+        <div class="tl-desc">Certificate sent to both your emails. Well done!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your rights -->
+  <div class="section" id="sla">
+    <div class="sec-title">
+      <span class="sec-icon">&#127942;</span>Your rights as an applicant
+    </div>
+    <div class="info-box ib-green">
+      <strong class="lbl">The system protects your time</strong>
+      <div class="timeline" style="margin-top:8px">
+        <div class="tl-item"><div class="tl-dot"></div>
+          <div class="tl-title">Day 7 after applying</div>
+          <div class="tl-desc">Startup is automatically reminded to review your application.</div>
+        </div>
+        <div class="tl-item"><div class="tl-dot"></div>
+          <div class="tl-title">Day 14 with no action</div>
+          <div class="tl-desc">Application closes, you are notified, and you can apply elsewhere.</div>
+        </div>
+        <div class="tl-item"><div class="tl-dot"></div>
+          <div class="tl-title">Day 5 after shortlist, no interview</div>
+          <div class="tl-desc">Startup is reminded to schedule your interview.</div>
+        </div>
+        <div class="tl-item"><div class="tl-dot"></div>
+          <div class="tl-title">48 hours after interview, no outcome</div>
+          <div class="tl-desc">Startup gets a second urgent nudge. Your status shows "Decision overdue".</div>
+        </div>
+        <div class="tl-item"><div class="tl-dot"></div>
+          <div class="tl-title">96 hours after interview, no outcome</div>
+          <div class="tl-desc">Application closes, CTIE admin is alerted, you can apply elsewhere.</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box ib-blue">
+      <strong class="lbl">Reschedule limit</strong>
+      A startup can reschedule your interview a maximum of 2 times. On the second reschedule,
+      both you and the startup are warned that no further rescheduling is allowed. A third
+      attempt is blocked and the application closes automatically.
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="sec-title"><span class="sec-icon">&#10067;</span>Frequently asked questions</div>
+    <div id="faqList">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can students from any college apply? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">Yes. The portal is open to students from any college across India.
+          You do not need to be from KLE Technological University. The only requirement is a valid
+          institute-provided email address.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What if my institute email has expired or I have graduated? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">If your institute email has expired, you cannot apply to new roles.
+          However, your personal email on file will still receive completion certificates and
+          any communications from startups you have completed internships with.
+          Contact ctie [at] kletech.ac.in if you have a special situation.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          I lost my Application ID. What do I do? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">Check your confirmation email -- it was sent to both your institute
+          and personal email when you applied. Search for "Application received" or "KLE-CTIE".
+          If you still cannot find it, email ctie [at] kletech.ac.in with your name and the role
+          you applied for.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Can I apply for multiple internships at the same time? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">Yes. You can apply to multiple open roles simultaneously.
+          Each application has its own ID and tracks independently.
+          You cannot apply to the same role twice.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          The startup is not responding. What should I do? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">The system automatically nudges startups and auto-closes
+          applications when SLA deadlines are missed. You do not need to do anything.
+          If you feel something is genuinely wrong beyond the SLA window, email
+          ctie [at] kletech.ac.in with your Application ID.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is there a fee to use this portal? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">No. The KLE-CTIE Internship Portal is completely free for students.
+          No registration fee, no placement fee, nothing. If anyone claims otherwise,
+          report it immediately to ctie [at] kletech.ac.in.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is the completion certificate official / recognised? <span class="faq-arrow">&#9660;</span>
+        </div>
+        <div class="faq-a">The completion certificate is issued by KLE-CTIE, a DST-NIDHI
+          recognised Technology Business Incubator under KLE Technological University.
+          It carries a unique certificate ID and can be verified through CTIE.
+          It is accepted as a valid internship credential by most universities for credit.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h3>Ready to find your internship?</h3>
+    <p>Browse open roles from CTIE-incubated startups across sectors.</p>
+    <button class="cta-btn" onclick="navPage('Browse')" type="button">Browse Internships &#8594;</button>
+    <button class="cta-btn" onclick="navPage('Track')" type="button">
+      Track My Application
+    </button>
+  </div>
+
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+
+<script>
+var EXEC_URL='<?= EXEC_URL ?>';
+var PAGES=<?!= PAGES_JSON ?>;
+function nav(k){window.top.location.href=PAGES[k]||PAGES['Home'];}
+function navPage(k){nav(k);}
+function navSector(s){window.top.location.href=PAGES['Browse']+'&sector='+encodeURIComponent(s);}
+
+function toggleFaq(el) {
+  var item = el.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');});
+  if (!isOpen) item.classList.add('open');
+}
+// Highlight active nav pill on scroll
+var sections = document.querySelectorAll('.section');
+window.addEventListener('scroll', function() {
+  var y = window.scrollY + 120;
+  sections.forEach(function(s){
+    if (s.offsetTop <= y && s.offsetTop + s.offsetHeight > y) {
+      document.querySelectorAll('.pill').forEach(function(p){p.classList.remove('on');});
+      var match = document.querySelector('.pill[href="#'+s.id+'"]');
+      if (match) match.classList.add('on');
+    }
+  });
+});
+</script>
+
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8679;</button>
+<script>window.addEventListener('scroll',function(){var b=document.getElementById('scrollTopBtn');if(b)b.classList.toggle('show',window.scrollY>300);});</script>
+</body>
+</html>
