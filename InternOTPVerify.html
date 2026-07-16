@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Confirm Internship -- KLE-CTIE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0B1F3A;font-family:Arial,sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+
+/* Logo row */
+.logo-row{display:flex;align-items:center;justify-content:space-between;
+  width:100%;max-width:400px;margin-bottom:20px}
+.lr-logo{height:36px;object-fit:contain}
+.lr-divider{width:1px;height:30px;background:rgba(200,151,58,0.3)}
+.lr-text{text-align:center}
+.lr-title{font-size:13px;font-weight:700;color:#C8973A}
+.lr-sub{font-size:10px;color:#6B8099}
+
+/* Main card */
+.card{background:#fff;border-radius:16px;padding:32px 28px;
+  width:100%;max-width:400px;text-align:center;
+  box-shadow:0 16px 48px rgba(0,0,0,0.4)}
+
+.state{display:none}.state.on{display:block}
+
+/* OTP state */
+.otp-icon{font-size:44px;margin-bottom:14px}
+.otp-title{font-size:20px;font-weight:700;color:#0B1F3A;margin-bottom:8px}
+.otp-sub{font-size:13px;color:#555;line-height:1.6;margin-bottom:18px}
+.otp-inputs{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+.otp-digit{width:48px;height:58px;border:2px solid #e0e4ea;border-radius:10px;
+  font-size:26px;font-weight:700;text-align:center;outline:none;color:#0B1F3A;
+  font-family:Arial;transition:all .15s}
+.otp-digit:focus{border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.15)}
+.otp-digit.err{border-color:#E24B4A;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.otp-hint{font-size:11px;color:#888;margin-bottom:14px;line-height:1.5}
+.attempts-left{font-size:11px;color:#E65100;font-weight:600;margin-bottom:8px;display:none}
+.security-note{background:#FFF8E1;border:1px solid #FFD54F;border-radius:8px;
+  padding:10px 12px;font-size:11px;color:#5D4037;text-align:left;margin-bottom:16px;line-height:1.6}
+.btn-confirm{width:100%;padding:13px;border-radius:9px;font-size:15px;font-weight:700;
+  border:none;cursor:pointer;font-family:Arial;transition:all .2s;
+  background:linear-gradient(135deg,#1D9E75,#0F5C38);color:#fff}
+.btn-confirm:hover{box-shadow:0 4px 14px rgba(29,158,117,0.4)}
+.btn-confirm:disabled{background:#ccc;cursor:not-allowed;box-shadow:none}
+.resend-row{margin-top:14px;font-size:12px;color:#888}
+.resend-link{color:#C8973A;cursor:pointer;font-weight:700;text-decoration:underline}
+.resend-link.disabled{color:#aaa;cursor:not-allowed;text-decoration:none}
+.err-msg{color:#C62828;font-size:12px;margin-bottom:10px;
+  background:#FFEBEE;border-radius:6px;padding:8px;display:none}
+.err-msg.show{display:block}
+
+/* Success state */
+.success-icon{font-size:52px;margin-bottom:10px}
+.confetti{font-size:28px;letter-spacing:4px;margin-bottom:10px;
+  animation:pop .4s ease both}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.success-title{font-size:22px;font-weight:700;color:#1D9E75;margin-bottom:8px}
+.success-msg{font-size:13px;color:#555;line-height:1.7;margin-bottom:18px}
+.success-checklist{background:#E8F5E9;border-radius:8px;padding:12px;
+  font-size:12px;color:#2E7D32;text-align:left;line-height:1.8}
+.success-checklist div{display:flex;align-items:center;gap:8px}
+
+/* Error state */
+.error-icon{font-size:44px;margin-bottom:10px}
+.error-title{font-size:18px;font-weight:700;color:#C62828;margin-bottom:8px}
+.error-msg{font-size:13px;color:#555;line-height:1.6;margin-bottom:16px}
+
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<!-- Logo row -->
+<div class="logo-row">
+  <img class="lr-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+    onerror="this.parentElement.children[0].style.display='none'">
+  <div class="lr-divider"></div>
+  <div class="lr-text">
+    <div class="lr-title">KLE-CTIE</div>
+    <div class="lr-sub">Internship Portal</div>
+  </div>
+  <div class="lr-divider"></div>
+  <img class="lr-logo" src="<?= CTIE_LOGO ?>" alt="CTIE"
+    onerror="this.style.display='none'">
+</div>
+
+<!-- Card -->
+<div class="card">
+
+  <!-- State: Enter OTP -->
+  <div class="state on" id="stateOTP">
+    <div class="otp-icon">&#128274;</div>
+    <div class="otp-title">Confirm Your Internship</div>
+    <div class="otp-sub">
+      Enter the 6-digit OTP sent to your institute email to confirm your acceptance.
+    </div>
+    <div class="otp-inputs">
+      <input class="otp-digit" id="d1" maxlength="1" type="text" inputmode="numeric">
+      <input class="otp-digit" id="d2" maxlength="1" type="text" inputmode="numeric">
+      <input class="otp-digit" id="d3" maxlength="1" type="text" inputmode="numeric">
+      <input class="otp-digit" id="d4" maxlength="1" type="text" inputmode="numeric">
+      <input class="otp-digit" id="d5" maxlength="1" type="text" inputmode="numeric">
+      <input class="otp-digit" id="d6" maxlength="1" type="text" inputmode="numeric">
+    </div>
+    <div class="otp-hint">Check your <strong>institute email</strong> inbox and spam folder</div>
+    <div class="attempts-left" id="attemptsLeft"></div>
+    <div class="err-msg" id="otpErr"></div>
+    <div class="security-note">
+      &#128274; <strong>Security notice:</strong> This OTP was sent only to your institute email.
+      Do not share it with anyone. KLE-CTIE will never call or message you asking for an OTP.
+    </div>
+    <button class="btn-confirm" id="confirmBtn" onclick="doVerify()" disabled>
+      Confirm Internship Acceptance &#10003;
+    </button>
+    <div class="resend-row">
+      Didn't get the email?
+      <span class="resend-link" id="resendLink" onclick="requestResend()">Resend OTP</span>
+      <span id="resendTimer" style="display:none;color:#888"></span>
+    </div>
+  </div>
+
+  <!-- State: Success -->
+  <div class="state" id="stateSuccess">
+    <div class="confetti">&#127881;&#127882;&#127881;</div>
+    <div class="success-icon">&#10003;</div>
+    <div class="success-title">Internship Confirmed!</div>
+    <div class="success-msg" id="successMsg">
+      Your internship has been confirmed. A welcome email has been sent to both your emails.
+      The startup team will contact you with onboarding details.
+    </div>
+    <div class="success-checklist">
+      <div>&#9989; Keep your institute email active during the internship</div>
+      <div>&#9989; Your completion certificate goes to both emails</div>
+      <div>&#9989; Track progress at any time using your App ID</div>
+    </div>
+    <div style="margin-top:16px">
+      <button style="display:inline-block;background:#0B1F3A;color:#C8973A;
+        padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none" onclick="nav('')" type="button">
+        Browse More Roles &#8594;
+      </button>
+    </div>
+  </div>
+
+  <!-- State: Fatal error (expired / closed) -->
+  <div class="state" id="stateError">
+    <div class="error-icon">&#10060;</div>
+    <div class="error-title" id="errTitle">OTP Error</div>
+    <div class="error-msg" id="errMsg">
+      Please check your institute email for the correct OTP.
+    </div>
+    <button style="display:inline-block;background:#0B1F3A;color:#C8973A;
+      padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none" onclick="navToTrack()" type="button">
+      Check Application Status
+    </button>
+  </div>
+
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+function nav(key) { window.top.location.href = PAGES[key] || PAGES['Home']; }
+function navPage(key) { nav(key); }
+function navToTrack() { window.top.location.href = PAGES['Track'] + '&appId=' + APP_ID; }
+function navSector(s) { window.top.location.href = PAGES['Browse'] + '&sector=' + encodeURIComponent(s); }
+var APP_ID   = '<?= appId ?>';
+var digits   = ['d1','d2','d3','d4','d5','d6'].map(function(id){return document.getElementById(id);});
+var RESEND_COOLDOWN = 60;
+var resendTimer = null;
+
+// Wire up OTP inputs
+digits.forEach(function(inp, i) {
+  inp.addEventListener('input', function() {
+    var v = inp.value.replace(/[^0-9]/g,'');
+    inp.value = v.slice(-1);
+    inp.classList.remove('err');
+    if (v && i < 5) digits[i+1].focus();
+    checkReady();
+  });
+  inp.addEventListener('keydown', function(e) {
+    if (e.key==='Backspace' && !inp.value && i>0) {
+      digits[i-1].value='';
+      digits[i-1].focus();
+    }
+  });
+  // Handle paste on first box
+  inp.addEventListener('paste', function(e) {
+    setTimeout(function() {
+      var all = digits.map(function(d){return d.value;}).join('');
+      if (all.length>=6) { checkReady(); digits[5].focus(); }
+      else {
+        // try to spread from clipboard
+        var clip = inp.value.replace(/[^0-9]/g,'').slice(0,6);
+        if (clip.length>=6) {
+          clip.split('').forEach(function(c,j){if(digits[j])digits[j].value=c;});
+          digits[5].focus(); checkReady();
+        }
+      }
+    }, 20);
+  });
+});
+digits[0].focus();
+
+function checkReady() {
+  var otp = digits.map(function(d){return d.value;}).join('');
+  document.getElementById('confirmBtn').disabled = otp.length < 6;
+}
+
+function getOTP() { return digits.map(function(d){return d.value;}).join(''); }
+
+function doVerify() {
+  var otp = getOTP();
+  if (otp.length<6) return;
+
+  document.getElementById('otpErr').classList.remove('show');
+  var btn = document.getElementById('confirmBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Verifying...';
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled=false;
+      btn.innerHTML='Confirm Internship Acceptance &#10003;';
+      if (r && r.ok) {
+        document.getElementById('stateOTP').classList.remove('on');
+        if (r.studentName) {
+          document.getElementById('successMsg').innerHTML =
+            'Welcome, <strong>'+r.studentName+'</strong>! Your internship with '
+            +'<strong>'+r.startupName+'</strong> is confirmed. Check both your emails '
+            +'for a welcome message and onboarding details.';
+        }
+        document.getElementById('stateSuccess').classList.add('on');
+      } else {
+        var msg = r ? r.msg : 'Verification failed';
+        // Check if it's a fatal error (too many attempts / closed)
+        if (msg.indexOf('Too many')>=0 || msg.indexOf('no longer pending')>=0) {
+          document.getElementById('stateOTP').classList.remove('on');
+          document.getElementById('errTitle').textContent = 'Unable to verify';
+          document.getElementById('errMsg').textContent   = msg;
+          document.getElementById('stateError').classList.add('on');
+        } else {
+          digits.forEach(function(d){d.classList.add('err');d.value='';});
+          digits[0].focus();
+          var errEl = document.getElementById('otpErr');
+          errEl.textContent = msg;
+          errEl.classList.add('show');
+          // Show remaining attempts if mentioned
+          if (msg.indexOf('remaining')>=0) {
+            var attEl = document.getElementById('attemptsLeft');
+            attEl.textContent = msg.split('(')[1]?msg:'';
+            attEl.style.display='block';
+          }
+          checkReady();
+        }
+      }
+    })
+    .withFailureHandler(function(e) {
+      btn.disabled=false;
+      btn.innerHTML='Confirm Internship Acceptance &#10003;';
+      document.getElementById('otpErr').textContent='Connection error: '+e.message;
+      document.getElementById('otpErr').classList.add('show');
+      checkReady();
+    })
+    .verifyOTP(APP_ID, otp);
+}
+
+// Resend OTP
+function requestResend() {
+  var link = document.getElementById('resendLink');
+  if (link.classList.contains('disabled')) return;
+  link.classList.add('disabled');
+  link.textContent='Sending...';
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      if (r && r.ok) {
+        link.textContent='Sent!';
+        startResendTimer();
+        digits.forEach(function(d){d.value='';});
+        digits[0].focus();
+        document.getElementById('otpErr').classList.remove('show');
+        document.getElementById('attemptsLeft').style.display='none';
+      } else {
+        link.classList.remove('disabled');
+        link.textContent='Resend OTP';
+        document.getElementById('otpErr').textContent=r?r.msg:'Could not resend OTP';
+        document.getElementById('otpErr').classList.add('show');
+      }
+    })
+    .withFailureHandler(function(e){
+      link.classList.remove('disabled');
+      link.textContent='Resend OTP';
+    })
+    .resendOTP(APP_ID);
+}
+
+function startResendTimer() {
+  var remaining = RESEND_COOLDOWN;
+  var timerEl   = document.getElementById('resendTimer');
+  var link      = document.getElementById('resendLink');
+  timerEl.style.display='inline';
+  timerEl.textContent='(wait '+remaining+'s)';
+  clearInterval(resendTimer);
+  resendTimer = setInterval(function() {
+    remaining--;
+    if (remaining<=0) {
+      clearInterval(resendTimer);
+      timerEl.style.display='none';
+      link.textContent='Resend OTP';
+      link.classList.remove('disabled');
+    } else {
+      timerEl.textContent='(wait '+remaining+'s)';
+    }
+  }, 1000);
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
