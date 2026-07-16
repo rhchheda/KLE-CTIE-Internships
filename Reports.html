@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reports -- KLE-CTIE Internship Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;color:#1a1a2e;min-height:100vh}
+
+/* Topbar */
+.topbar{background:#0B1F3A;padding:0 20px;display:flex;align-items:center;
+  justify-content:space-between;height:56px;border-bottom:2px solid #C8973A;
+  position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:32px;object-fit:contain}
+.tb-div{width:1px;height:24px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:30px;object-fit:contain;opacity:.85}
+.tb-btn{background:none;border:1px solid rgba(255,255,255,.15);color:#8A9BB0;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  font-family:Arial;transition:all .2s}
+.tb-btn:hover{color:#F7F3EC}
+.tb-btn-gold{background:rgba(200,151,58,.12);border:1px solid rgba(200,151,58,.4);
+  color:#C8973A;padding:5px 14px;border-radius:20px;font-size:11px;
+  font-weight:700;cursor:pointer;font-family:Arial}
+
+/* Layout */
+.main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.page-head h1{font-size:20px;font-weight:700;color:#1a1a2e}
+.page-head p{font-size:12px;color:#888;margin-top:3px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Filters */
+.filter-bar{background:#fff;border-radius:12px;padding:14px 18px;
+  border:1px solid #e8eaed;margin-bottom:18px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.flt{border:1.5px solid #e0e4ea;border-radius:8px;padding:8px 12px;
+  font-size:12px;background:#fff;outline:none;font-family:Arial;color:#444}
+.flt:focus{border-color:#C8973A}
+.flt-label{font-size:11px;font-weight:700;color:#888;margin-right:2px}
+.btn-apply{background:#0B1F3A;color:#C8973A;border:none;padding:8px 18px;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial}
+.btn-apply:hover{background:#132A45}
+.btn-print{background:none;border:1.5px solid #e0e4ea;color:#555;padding:8px 16px;
+  border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial}
+.btn-print:hover{border-color:#C8973A;color:#C8973A}
+
+/* Tab bar */
+.tab-bar{display:flex;gap:4px;border-bottom:2px solid #e8eaed;margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 18px;font-size:12px;font-weight:700;color:#888;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
+.tab.on{color:#C8973A;border-bottom-color:#C8973A}
+.tab-panel{display:none}.tab-panel.on{display:block}
+
+/* Stat cards */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:12px;padding:18px;border:1px solid #e8eaed;text-align:center}
+.stat-val{font-size:28px;font-weight:700;color:#0B1F3A;line-height:1}
+.stat-lbl{font-size:11px;color:#888;margin-top:5px}
+.stat-card.highlight .stat-val{color:#1D9E75}
+.stat-card.warn     .stat-val{color:#E65100}
+.stat-card.danger   .stat-val{color:#C62828}
+
+/* Charts */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.chart-card{background:#fff;border-radius:12px;padding:18px;border:1px solid #e8eaed}
+.chart-title{font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:14px}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:12px}
+.bar-label{width:130px;flex-shrink:0;color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;background:#f0f4f8;border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding:0 6px}
+.bar-fill span{font-size:10px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-count{width:40px;text-align:right;color:#888;flex-shrink:0}
+
+/* Tables */
+.table-card{background:#fff;border-radius:12px;border:1px solid #e8eaed;overflow:hidden;margin-bottom:16px}
+.table-title{padding:14px 18px;font-size:13px;font-weight:700;color:#1a1a2e;
+  border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+.table-title span{font-size:11px;font-weight:400;color:#888}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{background:#f8f9fa;color:#555;font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;
+  text-align:left;border-bottom:2px solid #e8eaed;white-space:nowrap}
+.data-table td{padding:9px 14px;border-bottom:1px solid #f5f5f5;color:#444;vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:#fafafa}
+.bold{font-weight:700;color:#1a1a2e}
+.sub{font-size:11px;color:#888}
+.pct-bar{display:flex;align-items:center;gap:6px}
+.pct-track{width:80px;height:8px;background:#f0f4f8;border-radius:4px;overflow:hidden;flex-shrink:0}
+.pct-fill{height:100%;border-radius:4px;background:#1D9E75}
+
+/* Badges */
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:9px;font-weight:700}
+.b-green{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.b-gold{background:#FFF3DE;color:#854F0B;border:1px solid #EF9F27}
+.b-red{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+.b-blue{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.b-gray{background:#f4f6f8;color:#666;border:1px solid #ddd}
+.b-purple{background:#F3E5F5;color:#4A148C;border:1px solid #CE93D8}
+.b-teal{background:#E0F2F1;color:#004D40;border:1px solid #80CBC4}
+
+/* Loading / empty */
+.loading{text-align:center;padding:40px;color:#aaa}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(200,151,58,.2);
+  border-top-color:#C8973A;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:32px;color:#aaa;font-size:13px}
+
+/* Print styles */
+@media print{
+  .topbar,.filter-bar,.tab-bar,.head-actions,.no-print{display:none!important}
+  .main{padding:0;max-width:none}
+  .tab-panel{display:block!important}
+  .charts-row{grid-template-columns:1fr 1fr}
+  .stat-row{grid-template-columns:repeat(4,1fr)}
+  body{background:#fff}
+}
+
+
+@media(max-width:768px){
+  .stat-row{grid-template-columns:1fr 1fr}
+  .charts-row{grid-template-columns:1fr}
+}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+.login-overlay{position:fixed;inset:0;background:#0B1F3A;z-index:10000;
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{background:#fff;border-radius:14px;padding:32px 28px;max-width:360px;
+  width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.login-card .lc-title{font-size:16px;font-weight:700;color:#0B1F3A;margin-bottom:4px}
+.login-card .lc-sub{font-size:12px;color:#888;margin-bottom:18px}
+.login-card .lc-err{font-size:12px;color:#C62828;margin-bottom:10px;display:none}
+.login-card .lc-err.show{display:block}
+.login-card input{width:100%;padding:10px 13px;border:1.5px solid #e0e4ea;
+  border-radius:8px;font-size:13px;outline:none;font-family:Arial;margin-bottom:14px}
+.login-card button{width:100%;background:#C8973A;color:#0B1F3A;border:none;
+  padding:11px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial}
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="lc-title">CTIE Admin Login</div>
+    <div class="lc-sub">Enter the admin PIN to view reports.</div>
+    <div class="lc-err" id="loginErr"></div>
+    <input type="text" inputmode="numeric" autocomplete="off" id="adminPin" placeholder="Enter admin PIN"
+      style="-webkit-text-security:disc"
+      onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button id="loginBtn" onclick="doAdminLogin()">Sign In</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE" onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div><div class="tb-title">Reports & Analytics</div>
+    <div class="tb-sub">KLE-CTIE Internship Portal</div></div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('Admin')">&#8592; Dashboard</button>
+    <button class="tb-btn-gold" onclick="window.print()">&#128438; Print / PDF</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE" onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-head">
+    <div>
+      <h1>Internship Reports</h1>
+      <p id="reportSubtitle">Loading data...</p>
+    </div>
+    <div class="head-actions no-print">
+      <button class="btn-print" onclick="exportCSV()">&#8595; Export CSV</button>
+      <button class="btn-print" onclick="window.print()">&#128438; Print / PDF</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar no-print">
+    <span class="flt-label">From</span>
+    <input type="date" class="flt" id="fFrom">
+    <span class="flt-label">To</span>
+    <input type="date" class="flt" id="fTo">
+    <span class="flt-label">Startup</span>
+    <select class="flt" id="fStartup" style="min-width:160px">
+      <option value="">All Startups</option>
+    </select>
+    <span class="flt-label">Status</span>
+    <select class="flt" id="fStatus">
+      <option value="">All Statuses</option>
+      <option>Applied</option><option>Shortlisted</option>
+      <option>Interview Scheduled</option><option>Selected</option>
+      <option>Completed</option><option>Not Selected</option>
+    </select>
+    <span class="flt-label">Institute</span>
+    <select class="flt" id="fInstitute" onchange="populateDepartmentFilter(this.value)" style="min-width:180px">
+      <option value="">All Institutes</option>
+    </select>
+    <span class="flt-label">Department</span>
+    <select class="flt" id="fDepartment" style="min-width:160px">
+      <option value="">All Departments</option>
+    </select>
+    <button class="btn-apply" onclick="loadReports()">Apply</button>
+    <button class="btn-print" onclick="resetFilters()">Reset</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar no-print">
+    <div class="tab on"  onclick="showTab('summary',  this)">Summary</div>
+    <div class="tab"     onclick="showTab('startups', this)">Startup Performance</div>
+    <div class="tab"     onclick="showTab('sectors',  this)">Sector Breakdown</div>
+    <div class="tab"     onclick="showTab('apps',     this)">All Applications</div>
+    <div class="tab"     onclick="showTab('sla',      this)">SLA Violations</div>
+  </div>
+
+  <!-- Loading state -->
+  <div id="loadingState" class="loading">
+    <span class="spin"></span>
+    <div style="margin-top:10px;font-size:13px">Loading report data...</div>
+  </div>
+
+  <!-- Summary tab -->
+  <div class="tab-panel on" id="tabSummary" style="display:none">
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-val" id="rTotalApps">--</div><div class="stat-lbl">Total Applications</div></div>
+      <div class="stat-card highlight"><div class="stat-val" id="rCompleted">--</div><div class="stat-lbl">Completed Internships</div></div>
+      <div class="stat-card"><div class="stat-val" id="rFillRate">--%</div><div class="stat-lbl">Position Fill Rate</div></div>
+      <div class="stat-card danger"><div class="stat-val" id="rSLA">--</div><div class="stat-lbl">SLA Violations</div></div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Applications by Status</div>
+        <div class="bar-chart" id="statusChart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Applications by Month</div>
+        <div class="bar-chart" id="monthChart"></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-title">Internship Roles Overview
+        <span id="roleCount"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>Role</th><th>Startup</th><th>Sector</th>
+            <th>Positions</th><th>Fill Rate</th><th>Stipend</th><th>Status</th>
+          </tr></thead>
+          <tbody id="rolesBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Startup Performance tab -->
+  <div class="tab-panel" id="tabStartups">
+    <div class="table-card">
+      <div class="table-title">Startup Performance
+        <span id="startupCount"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>Startup</th><th>Sector</th><th>Roles Posted</th>
+            <th>Applications</th><th>Shortlist Rate</th>
+            <th>Selection Rate</th><th>Completions</th>
+            <th>Reschedule Limit Hits</th>
+          </tr></thead>
+          <tbody id="startupBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sector Breakdown tab -->
+  <div class="tab-panel" id="tabSectors">
+    <div class="charts-row">
+      <div class="chart-card" style="grid-column:1/-1">
+        <div class="chart-title">Internships by Sector</div>
+        <div class="bar-chart" id="sectorChart"></div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-title">Sector Details</div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>Sector</th><th>Roles</th><th>Total Positions</th>
+            <th>Filled</th><th>Fill Rate</th>
+            <th>Stipend-Based</th><th>Academic</th>
+          </tr></thead>
+          <tbody id="sectorBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Applications tab -->
+  <div class="tab-panel" id="tabApps">
+    <div class="filter-bar no-print" style="margin-bottom:12px">
+      <input type="text" class="flt" id="appSearch" placeholder="Search name, startup, App ID..."
+        oninput="renderAppsTable()" style="flex:1;min-width:200px">
+      <span id="appTableCount" style="font-size:12px;color:#888;white-space:nowrap"></span>
+    </div>
+    <div class="table-card">
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>App ID</th><th>Student</th><th>Institute</th>
+            <th>Startup</th><th>Status</th><th>Applied</th><th>Reschedules</th>
+          </tr></thead>
+          <tbody id="appsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLA Violations tab -->
+  <div class="tab-panel" id="tabSla">
+    <div class="stat-row" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px">
+      <div class="stat-card danger"><div class="stat-val" id="slaTotal">--</div><div class="stat-lbl">Total Auto-Closed</div></div>
+      <div class="stat-card warn"><div class="stat-val" id="slaNoReview">--</div><div class="stat-lbl">Not Reviewed</div></div>
+      <div class="stat-card warn"><div class="stat-val" id="slaNoOutcome">--</div><div class="stat-lbl">No Outcome</div></div>
+    </div>
+    <div class="table-card">
+      <div class="table-title">Auto-Closed Applications (SLA Violations)</div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead><tr>
+            <th>App ID</th><th>Student</th><th>Startup</th>
+            <th>Reason</th><th>Applied</th>
+          </tr></thead>
+          <tbody id="slaBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+var DATA        = null;  // cached report data
+var ADMIN_TOKEN = null;
+
+// ── AUTH ──────────────────────────────────────────────────────
+// Reuses the same sessionStorage key as AdminDashboard/AdminSettings so an
+// already-logged-in admin doesn't need to sign in again on this page.
+(function(){
+  try {
+    var saved = sessionStorage.getItem('ctie_admin_session');
+    if (!saved) return;
+    var parsed = JSON.parse(saved);
+    if (!parsed.token || !parsed.ts || Date.now() - parsed.ts > 6*60*60*1000) {
+      sessionStorage.removeItem('ctie_admin_session');
+      return;
+    }
+    ADMIN_TOKEN = parsed.token;
+    authed();
+  } catch(e){}
+})();
+
+function doAdminLogin() {
+  var pin = document.getElementById('adminPin').value.trim();
+  if (!pin) { showErr('Enter the admin PIN'); return; }
+  var btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled = false;
+      if (!r || !r.ok) { showErr(r ? r.msg : 'Login failed'); return; }
+      ADMIN_TOKEN = r.token;
+      try {
+        sessionStorage.setItem('ctie_admin_session', JSON.stringify({ token: r.token, ts: Date.now() }));
+      } catch(e){}
+      authed();
+    })
+    .withFailureHandler(function(e) { btn.disabled = false; showErr('Error: ' + e.message); })
+    .adminLogin(pin);
+}
+function showErr(msg){
+  var el=document.getElementById('loginErr'); el.textContent=msg; el.classList.add('show');
+}
+function isSessionExpired(r) {
+  if (r && r.ok === false && /session expired/i.test(r.msg || '')) {
+    ADMIN_TOKEN = null;
+    try { sessionStorage.removeItem('ctie_admin_session'); } catch(e){}
+    document.getElementById('loginOverlay').style.display = 'flex';
+    showErr('Your session expired. Please log in again.');
+    return true;
+  }
+  return false;
+}
+function authed() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  // Set default date range: last 6 months
+  var now  = new Date();
+  var from = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+  document.getElementById('fTo').value   = fmt(now);
+  document.getElementById('fFrom').value = fmt(from);
+  loadInstituteFilterOptions();
+  loadReports();
+}
+
+function fmt(d) {
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function pad(n){ return n<10?'0'+n:String(n); }
+
+// ?? LOAD ??????????????????????????????????????????????????????
+function loadReports() {
+  document.getElementById('loadingState').style.display = 'block';
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+
+  var filters = {
+    from:       document.getElementById('fFrom').value,
+    to:         document.getElementById('fTo').value,
+    startup:    document.getElementById('fStartup').value,
+    status:     document.getElementById('fStatus').value,
+    institute:  document.getElementById('fInstitute').value,
+    department: document.getElementById('fDepartment').value
+  };
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      document.getElementById('loadingState').style.display = 'none';
+      if (isSessionExpired(r)) return;
+      if (!r || !r.ok) {
+        document.getElementById('loadingState').innerHTML =
+          '<div style="color:#C62828">Error loading reports. Check Apps Script logs.</div>';
+        document.getElementById('loadingState').style.display = 'block';
+        return;
+      }
+      DATA = r;
+      populateStartupFilter(r.startups);
+      renderAll(r);
+      showTab('summary', document.querySelector('.tab'));
+      var sub = (r.applications.length) + ' applications';
+      if (filters.from) sub += ' from ' + filters.from;
+      if (filters.to)   sub += ' to ' + filters.to;
+      document.getElementById('reportSubtitle').textContent = sub;
+    })
+    .withFailureHandler(function(e) {
+      document.getElementById('loadingState').innerHTML =
+        '<div style="color:#C62828">Error: ' + e.message + '</div>';
+    })
+    .getAdminReports(ADMIN_TOKEN, filters);
+}
+
+function resetFilters() {
+  document.getElementById('fStartup').value = '';
+  document.getElementById('fStatus').value  = '';
+  document.getElementById('fInstitute').value = '';
+  populateDepartmentFilter('');
+  var now  = new Date();
+  var from = new Date(now.getFullYear(), now.getMonth()-5, 1);
+  document.getElementById('fTo').value   = fmt(now);
+  document.getElementById('fFrom').value = fmt(from);
+  loadReports();
+}
+
+// ?? INSTITUTE / DEPARTMENT FILTER (sourced from DEPARTMENTS sheet) ??
+var INSTITUTE_REPORT_DATA = [];
+function loadInstituteFilterOptions() {
+  google.script.run
+    .withSuccessHandler(function(r) {
+      INSTITUTE_REPORT_DATA = (r && r.institutes) || [];
+      var sel = document.getElementById('fInstitute');
+      sel.innerHTML = '<option value="">All Institutes</option>'
+        + INSTITUTE_REPORT_DATA.map(function(i){ return '<option value="'+esc(i.name)+'">'+esc(i.name)+'</option>'; }).join('');
+      populateDepartmentFilter('');
+    })
+    .withFailureHandler(function(){})
+    .getInstituteDepartments();
+}
+function populateDepartmentFilter(instituteName) {
+  var depts;
+  if (instituteName) {
+    var inst = INSTITUTE_REPORT_DATA.find(function(i){ return i.name === instituteName; });
+    depts = (inst && inst.departments) || [];
+  } else {
+    var set = {};
+    INSTITUTE_REPORT_DATA.forEach(function(i){ (i.departments||[]).forEach(function(d){ set[d]=true; }); });
+    depts = Object.keys(set).sort();
+  }
+  var sel = document.getElementById('fDepartment');
+  var cur = sel.value;
+  sel.innerHTML = '<option value="">All Departments</option>'
+    + depts.map(function(d){ return '<option value="'+esc(d)+'">'+esc(d)+'</option>'; }).join('');
+  sel.value = depts.indexOf(cur) >= 0 ? cur : '';
+}
+
+// ?? POPULATE STARTUP FILTER ???????????????????????????????????
+function populateStartupFilter(startups) {
+  var sel = document.getElementById('fStartup');
+  var cur = sel.value;
+  while (sel.options.length > 1) sel.remove(1);
+  (startups||[]).forEach(function(s) {
+    var o = document.createElement('option');
+    o.value = s.Startup_ID; o.textContent = s.Startup_Name || s.Startup_ID;
+    sel.appendChild(o);
+  });
+  sel.value = cur;
+}
+
+// ?? RENDER ALL ????????????????????????????????????????????????
+function renderAll(r) {
+  renderSummary(r);
+  renderStartups(r);
+  renderSectors(r);
+  renderAppsTable();
+  renderSLA(r);
+}
+
+// ?? SUMMARY ???????????????????????????????????????????????????
+function renderSummary(r) {
+  var s = r.summary;
+  document.getElementById('rTotalApps').textContent = s.totalApps;
+  document.getElementById('rCompleted').textContent = s.completed;
+  document.getElementById('rFillRate').textContent  = s.fillRate + '%';
+  document.getElementById('rSLA').textContent       = s.slaViolations;
+
+  // Status bar chart
+  var statuses = r.statuses;
+  var maxSt    = Math.max.apply(null, Object.values(statuses).concat([1]));
+  var COLORS   = {
+    'Applied':'#C8973A','Shortlisted':'#378ADD','Interview Scheduled':'#7F77DD',
+    'Offer Pending OTP':'#E65100','Selected':'#1D9E75','Completed':'#1B5E20',
+    'Not Selected':'#888888'
+  };
+  document.getElementById('statusChart').innerHTML =
+    Object.keys(statuses).sort(function(a,b){return statuses[b]-statuses[a];})
+    .map(function(st) {
+      var n   = statuses[st];
+      var pct = Math.round(n/maxSt*100);
+      var col = COLORS[st] || '#aaa';
+      return '<div class="bar-row">'
+        + '<div class="bar-label" title="'+esc(st)+'">'+esc(st)+'</div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'">'
+        + '<span>'+n+'</span></div></div>'
+        + '<div class="bar-count">'+n+'</div></div>';
+    }).join('');
+
+  // Month bar chart
+  var months  = r.monthMap;
+  var maxMo   = Math.max.apply(null, Object.values(months).concat([1]));
+  var mKeys   = Object.keys(months).sort();
+  document.getElementById('monthChart').innerHTML =
+    mKeys.map(function(mo) {
+      var n   = months[mo];
+      var pct = Math.round(n/maxMo*100);
+      return '<div class="bar-row">'
+        + '<div class="bar-label">'+esc(mo||'Unknown')+'</div>'
+        + '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:#0B1F3A">'
+        + '<span>'+n+'</span></div></div>'
+        + '<div class="bar-count">'+n+'</div></div>';
+    }).join('') || '<div class="empty">No data</div>';
+
+  // Roles table
+  document.getElementById('roleCount').textContent = r.roles.length + ' roles';
+  document.getElementById('rolesBody').innerHTML =
+    r.roles.length
+    ? r.roles.map(function(role) {
+        var filled = parseInt(role.Positions_Filled||0);
+        var avail  = parseInt(role.Positions_Available||1);
+        var pct    = Math.min(Math.round(filled/avail*100),100);
+        var stipend= parseFloat(role.Stipend_INR||0);
+        var sc     = roleStatusClass(String(role.Status||''));
+        return '<tr>'
+          +'<td><div class="bold">'+esc(role.Role_Title||'')+'</div>'
+          +'<div class="sub">'+esc(role.Work_Mode||'')+' &bull; '+esc(role.Duration_Weeks||'')+'wks</div></td>'
+          +'<td>'+esc(role.Startup_Name||'')+'</td>'
+          +'<td>'+esc(role.Department||'')+'</td>'
+          +'<td style="text-align:center">'+filled+'/'+avail+'</td>'
+          +'<td><div class="pct-bar">'
+          +'<div class="pct-track"><div class="pct-fill" style="width:'+pct+'%"></div></div>'
+          +'<span style="font-size:11px;color:#555">'+pct+'%</span></div></td>'
+          +'<td>'+(stipend>0?'<span class="badge b-gold">Rs.'+stipend.toLocaleString('en-IN')+'</span>'
+                            :'<span class="badge b-gray">Academic</span>')+'</td>'
+          +'<td><span class="badge '+sc+'">'+esc(role.Status||'')+'</span></td>'
+          +'</tr>';
+      }).join('')
+    : '<tr><td colspan="7" class="empty">No roles in this period</td></tr>';
+}
+
+// ?? STARTUP PERFORMANCE ???????????????????????????????????????
+function renderStartups(r) {
+  var sm      = r.startupMap;
+  var starts  = r.startups || [];
+  var roleMap = {};
+  (r.roles||[]).forEach(function(ro){
+    roleMap[ro.Startup_ID] = (roleMap[ro.Startup_ID]||0)+1;
+  });
+
+  document.getElementById('startupCount').textContent = Object.keys(sm).length + ' startups';
+  var rows = Object.keys(sm).sort(function(a,b){
+    return sm[b].apps - sm[a].apps;
+  });
+
+  document.getElementById('startupBody').innerHTML = rows.length
+    ? rows.map(function(sid) {
+        var d       = sm[sid];
+        var rolesN  = roleMap[sid] || 0;
+        var slRate  = d.apps  ? Math.round(d.shortlisted/d.apps*100)  : 0;
+        var selRate = d.apps  ? Math.round(d.selected/d.apps*100)     : 0;
+        return '<tr>'
+          +'<td><div class="bold">'+esc(d.name)+'</div>'
+          +'<div class="sub" style="font-family:monospace">'+esc(sid)+'</div></td>'
+          +'<td>'+esc(getSector(starts,sid))+'</td>'
+          +'<td style="text-align:center">'+rolesN+'</td>'
+          +'<td style="text-align:center">'+d.apps+'</td>'
+          +'<td><div class="pct-bar">'
+          +'<div class="pct-track"><div class="pct-fill" style="width:'+slRate+'%"></div></div>'
+          +'<span style="font-size:11px;color:#555">'+slRate+'%</span></div></td>'
+          +'<td><div class="pct-bar">'
+          +'<div class="pct-track"><div class="pct-fill" style="width:'+selRate+'%;background:#C8973A"></div></div>'
+          +'<span style="font-size:11px;color:#555">'+selRate+'%</span></div></td>'
+          +'<td style="text-align:center">'+d.completed+'</td>'
+          +'<td style="text-align:center;color:'+(d.rescheduleLimit>0?'#C62828':'#888')+'">'+d.rescheduleLimit+'</td>'
+          +'</tr>';
+      }).join('')
+    : '<tr><td colspan="8" class="empty">No data</td></tr>';
+}
+
+// ?? SECTOR BREAKDOWN ??????????????????????????????????????????
+function renderSectors(r) {
+  var sm  = r.sectorMap;
+  var max = Math.max.apply(null, Object.values(sm).map(function(s){return s.roles;}).concat([1]));
+  var SECTOR_COLORS = {
+    'AgriTech':'#2E7D32','HealthTech':'#C62828','EdTech':'#1565C0',
+    'FinTech':'#E65100','IoT & Hardware':'#6A1B9A','AI / ML':'#0277BD',
+    'CleanTech':'#00695C','SaaS / B2B':'#4527A0','MedTech':'#AD1457','Other':'#757575'
+  };
+  document.getElementById('sectorChart').innerHTML =
+    Object.keys(sm).sort(function(a,b){return sm[b].roles-sm[a].roles;})
+    .map(function(sec) {
+      var s   = sm[sec];
+      var pct = Math.round(s.roles/max*100);
+      var col = SECTOR_COLORS[sec]||'#555';
+      return '<div class="bar-row">'
+        +'<div class="bar-label" title="'+esc(sec)+'">'+esc(sec)+'</div>'
+        +'<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+col+'">'
+        +'<span>'+s.roles+' roles</span></div></div>'
+        +'<div class="bar-count">'+s.filled+'/'+s.positions+'</div></div>';
+    }).join('') || '<div class="empty">No data</div>';
+
+  document.getElementById('sectorBody').innerHTML =
+    Object.keys(sm).sort(function(a,b){return sm[b].roles-sm[a].roles;})
+    .map(function(sec) {
+      var s   = sm[sec];
+      var pct = s.positions ? Math.round(s.filled/s.positions*100) : 0;
+      return '<tr>'
+        +'<td class="bold">'+esc(sec)+'</td>'
+        +'<td style="text-align:center">'+s.roles+'</td>'
+        +'<td style="text-align:center">'+s.positions+'</td>'
+        +'<td style="text-align:center">'+s.filled+'</td>'
+        +'<td><div class="pct-bar">'
+        +'<div class="pct-track"><div class="pct-fill" style="width:'+pct+'%"></div></div>'
+        +'<span style="font-size:11px;color:#555">'+pct+'%</span></div></td>'
+        +'<td style="text-align:center"><span class="badge b-gold">'+s.stipend+'</span></td>'
+        +'<td style="text-align:center"><span class="badge b-gray">'+s.academic+'</span></td>'
+        +'</tr>';
+    }).join('') || '<tr><td colspan="7" class="empty">No data</td></tr>';
+}
+
+// ?? ALL APPLICATIONS ??????????????????????????????????????????
+function renderAppsTable() {
+  if (!DATA) return;
+  var q    = (document.getElementById('appSearch').value||'').toLowerCase();
+  var list = DATA.applications.filter(function(a){
+    return !q || [a.App_ID,a.Student_Name,a.Startup_Name,a.Institute_Email]
+      .join(' ').toLowerCase().indexOf(q) >= 0;
+  });
+  document.getElementById('appTableCount').textContent = list.length+' records';
+  document.getElementById('appsBody').innerHTML = list.length
+    ? list.map(function(a){
+        var sc = appStatusClass(String(a.Status||''));
+        var rs = parseInt(a.Reschedule_Count||0);
+        return '<tr>'
+          +'<td><span style="font-family:monospace;font-size:11px">'+esc(a.App_ID||'')+'</span></td>'
+          +'<td><div class="bold">'+esc(a.Student_Name||'')+'</div>'
+          +'<div class="sub">'+esc(a.Institute_Email||'')+'</div></td>'
+          +'<td class="sub">'+esc(a.Institute_Name||'')+'</td>'
+          +'<td>'+esc(a.Startup_Name||'')+'</td>'
+          +'<td><span class="badge '+sc+'">'+esc(a.Status||'')+'</span></td>'
+          +'<td class="sub">'+esc(String(a.Applied_At||'').substring(0,11))+'</td>'
+          +'<td style="text-align:center;color:'+(rs>=2?'#C62828':rs>0?'#E65100':'#888')+'">'+rs+'/2</td>'
+          +'</tr>';
+      }).join('')
+    : '<tr><td colspan="7" class="empty">No applications found</td></tr>';
+}
+
+// ?? SLA VIOLATIONS ????????????????????????????????????????????
+function renderSLA(r) {
+  var sla    = r.slaViolations || [];
+  var noRev  = sla.filter(function(a){return String(a.Notes||'').indexOf('did not review')>=0;}).length;
+  var noOut  = sla.filter(function(a){return String(a.Notes||'').indexOf('did not enter outcome')>=0;}).length;
+  document.getElementById('slaTotal').textContent    = sla.length;
+  document.getElementById('slaNoReview').textContent = noRev;
+  document.getElementById('slaNoOutcome').textContent= noOut;
+  document.getElementById('slaBody').innerHTML = sla.length
+    ? sla.map(function(a){
+        var notes = String(a.Notes||'').replace('Auto-closed:','').trim();
+        return '<tr>'
+          +'<td><span style="font-family:monospace;font-size:11px">'+esc(a.App_ID||'')+'</span></td>'
+          +'<td>'+esc(a.Student_Name||'')+'</td>'
+          +'<td>'+esc(a.Startup_Name||'')+'</td>'
+          +'<td class="sub">'+esc(notes)+'</td>'
+          +'<td class="sub">'+esc(String(a.Applied_At||'').substring(0,11))+'</td>'
+          +'</tr>';
+      }).join('')
+    : '<tr><td colspan="5" class="empty">No SLA violations in this period &#9989;</td></tr>';
+}
+
+// ?? CSV EXPORT ????????????????????????????????????????????????
+function exportCSV() {
+  if (!DATA || !DATA.applications.length) { return; }
+  var headers = ['App_ID','Student_Name','Institute_Email','Mobile',
+    'Institute_Name','Course','Year','CGPA','Startup_Name','Internship_ID',
+    'Status','Applied_At','Reschedule_Count','Notes'];
+  var rows = [headers.join(',')];
+  DATA.applications.forEach(function(a) {
+    rows.push(headers.map(function(h){
+      var v = String(a[h]||'');
+      if (v.indexOf(',')>=0||v.indexOf('"')>=0) v='"'+v.replace(/"/g,'""')+'"';
+      return v;
+    }).join(','));
+  });
+  var blob = new Blob([rows.join('\n')],{type:'text/csv'});
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href   = url;
+  a.download = 'CTIE_Report_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ?? HELPERS ???????????????????????????????????????????????????
+function showTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.style.display='none';});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  var panel = document.getElementById('tab'+name.charAt(0).toUpperCase()+name.slice(1));
+  if (panel) panel.style.display = 'block';
+  if (el) el.classList.add('on');
+  if (name === 'apps') renderAppsTable();
+}
+
+function getSector(startups, sid) {
+  var s = (startups||[]).find(function(x){ return x.Startup_ID === sid; });
+  return s ? (s.Sector||'') : '';
+}
+
+function roleStatusClass(s) {
+  return s==='Open'?'b-green':s==='Full'?'b-gold':s==='Closed'?'b-gray':'b-blue';
+}
+function appStatusClass(s) {
+  var m = {'Applied':'b-gold','Shortlisted':'b-blue','Interview Scheduled':'b-purple',
+    'Interview Held -- Outcome Pending':'b-teal','Offer Pending OTP':'b-gold',
+    'Selected':'b-green','Completed':'b-green','Not Selected':'b-gray'};
+  return m[s]||(s.indexOf('Closed')>=0?'b-red':'b-gray');
+}
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+</script>
+</body>
+</html>
