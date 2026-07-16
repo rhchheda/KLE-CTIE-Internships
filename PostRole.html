@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post Internship Role -- KLE-CTIE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh}
+
+/* Topbar */
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;
+  border-bottom:2px solid #C8973A}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-divider{width:1px;height:26px;background:rgba(200,151,58,0.3);flex-shrink:0}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{background:none;border:1px solid rgba(255,255,255,0.15);color:#8A9BB0;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;transition:all .2s;font-family:Arial}
+.tb-btn:hover{color:#F7F3EC;border-color:rgba(255,255,255,0.3)}
+
+/* Layout */
+.main{max-width:720px;margin:0 auto;padding:24px 16px 80px}
+.page-head{margin-bottom:20px}
+.page-head h1{font-size:20px;font-weight:700;color:#1a1a2e}
+.page-head p{font-size:13px;color:#888;margin-top:4px}
+
+/* Cards */
+.card{background:#fff;border-radius:14px;padding:22px 24px;
+  border:1px solid #e8eaed;margin-bottom:14px}
+.sec-head{font-size:11px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;color:#C8973A;margin-bottom:16px;
+  padding-bottom:8px;border-bottom:1px solid #f0f0f0;
+  display:flex;align-items:center;gap:8px}
+
+/* Form */
+.fg{margin-bottom:14px}
+.fg label{display:flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:#555;margin-bottom:5px}
+.req{color:#E24B4A;font-size:11px}
+.tip{display:inline-block;width:14px;height:14px;border-radius:50%;
+  background:#e8eaed;color:#666;font-size:9px;font-weight:700;
+  text-align:center;line-height:14px;cursor:help;position:relative;flex-shrink:0}
+.tip:hover::after{content:attr(data-tip);position:absolute;bottom:18px;left:50%;
+  transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:6px 10px;
+  border-radius:6px;font-size:11px;white-space:nowrap;z-index:50;
+  font-weight:400;letter-spacing:0;text-transform:none;max-width:220px;
+  white-space:normal;line-height:1.4;width:max-content;max-width:200px}
+.fg input,.fg select,.fg textarea{width:100%;padding:10px 13px;
+  border:1.5px solid #e0e4ea;border-radius:8px;font-size:13px;
+  color:#1a1a2e;outline:none;font-family:Arial;transition:border-color .2s,box-shadow .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{
+  border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+.fg input.err,.fg select.err,.fg textarea.err{border-color:#E24B4A}
+.fg .hint{font-size:10px;color:#888;margin-top:4px;line-height:1.5}
+.fg .err-msg{font-size:11px;color:#E24B4A;margin-top:3px;display:none}
+.fg .err-msg.show{display:block}
+.fg textarea{resize:vertical;min-height:90px;line-height:1.5}
+.fg select{cursor:pointer;background:#fff}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* Char counter */
+.field-footer{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.char-ct{font-size:10px;color:#aaa;transition:color .2s}
+.char-ct.warn{color:#E24B4A;font-weight:700}
+
+/* Skill tag input */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;
+  border:1.5px solid #e0e4ea;border-radius:8px;min-height:46px;
+  cursor:text;transition:border-color .2s,box-shadow .2s}
+.tags-wrap:focus-within{border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+.tags-wrap.err-border{border-color:#E24B4A}
+.tag-pill{display:inline-flex;align-items:center;gap:4px;
+  border-radius:6px;padding:3px 9px;font-size:11px;font-weight:700;
+  white-space:nowrap}
+.tag-must{background:#0B1F3A;color:#C8973A}
+.tag-pref{background:#E8F0FF;color:#1A3A7C;border:1px solid #B0C4FF}
+.tag-pill button{background:none;border:none;cursor:pointer;
+  font-size:12px;line-height:1;padding:0;opacity:0.65}
+.tag-pill button:hover{opacity:1}
+.tag-input{border:none;outline:none;font-size:12px;
+  min-width:120px;flex:1;font-family:Arial;background:transparent}
+
+/* Stipend toggle */
+.stipend-toggle{display:flex;gap:8px;margin-bottom:12px}
+.s-opt{padding:9px 18px;border-radius:8px;border:1.5px solid #e0e4ea;
+  font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;color:#666}
+.s-opt.on{border-color:#C8973A;background:#FFFBF4;color:#854F0B}
+
+/* Discipline chips */
+.disc-grid{display:flex;flex-wrap:wrap;gap:7px}
+.disc-chip{padding:6px 12px;border-radius:20px;border:1.5px solid #e0e4ea;
+  font-size:11px;cursor:pointer;transition:all .15s;color:#555;font-family:Arial;
+  background:#fff;user-select:none}
+.disc-chip.on{border-color:#0B1F3A;background:#0B1F3A;color:#C8973A;font-weight:700}
+.disc-chip.any.on{border-color:#C8973A;background:#FFFBF4;color:#854F0B}
+
+/* Alert */
+.alert{border-radius:8px;padding:10px 14px;font-size:12px;
+  margin-bottom:14px;display:none;line-height:1.5}
+.alert.show{display:block}
+.alert-err{background:#FFEBEE;border:1px solid #FFCDD2;color:#C62828}
+
+/* Buttons */
+.btn-gold{background:linear-gradient(135deg,#C8973A,#A06B18);border:none;
+  color:#0B1F3A;padding:11px 22px;border-radius:8px;font-size:13px;
+  font-weight:700;cursor:pointer;font-family:Arial;transition:all .2s;
+  display:inline-flex;align-items:center;gap:7px}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(200,151,58,0.4);transform:translateY(-1px)}
+.btn-gold:disabled{background:#ccc;color:#888;cursor:not-allowed;
+  transform:none;box-shadow:none}
+.btn-outline{background:none;border:1.5px solid #e0e4ea;color:#555;
+  padding:10px 20px;border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial}
+.btn-outline:hover{border-color:#C8973A;color:#C8973A}
+
+/* Login gate */
+.login-gate{background:#FFF8E1;border:1px solid #FFD54F;border-radius:12px;
+  padding:20px 24px;text-align:center;margin-bottom:16px}
+.login-gate p{font-size:13px;color:#555;margin-bottom:12px}
+
+/* Preview badge */
+.preview-card{background:#f4f6f9;border-radius:10px;padding:14px 16px;margin-top:10px}
+.preview-label{font-size:10px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:#888;margin-bottom:8px}
+
+/* Success state */
+.success-card{display:none;background:#fff;border-radius:14px;
+  padding:32px;border:1px solid #e8eaed;text-align:center}
+.success-card.show{display:block}
+.success-id{font-size:22px;font-weight:700;color:#0B1F3A;font-family:monospace;
+  background:#f8f9fa;border:2px dashed #C8973A;padding:10px 24px;
+  border-radius:8px;display:inline-block;margin:12px 0}
+
+.spin{display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+  border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:60px;right:18px;z-index:9998;
+  padding:11px 16px;border-radius:9px;font-size:12px;font-weight:600;
+  max-width:320px;box-shadow:0 6px 20px rgba(0,0,0,0.2);display:none}
+.toast.show{display:block}
+.tok{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.ter{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+
+@media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.main{padding:16px}}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-divider"></div>
+    <div>
+      <div class="tb-title">Post Internship Role</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('StartupPortal')" type="button">&#8592; My Portal</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-head">
+    <h1>Post an Internship Role</h1>
+    <p>Structured form -- takes under 4 minutes. Role goes live immediately.</p>
+  </div>
+
+  <!-- Login gate -->
+  <div id="loginGate" class="login-gate" style="display:none">
+    <p>Please log in to your Startup Portal first to post a role.</p>
+    <button class="btn-gold" style="font-size:12px;padding:9px 18px" onclick="navPage('StartupPortal')" type="button">
+      Go to Startup Portal &#8594;
+    </button>
+  </div>
+
+  <!-- Post form -->
+  <div id="postForm" style="display:none">
+    <div class="alert alert-err" id="formErr"></div>
+
+    <!-- 1. Role basics -->
+    <div class="card">
+      <div class="sec-head">&#128196; Role Details</div>
+      <div class="fg">
+        <label>Role / Position Title <span class="req">*</span>
+          <span class="tip" data-tip="Be specific: 'IoT Firmware Engineer Intern' beats 'Tech Intern'">&#63;</span>
+        </label>
+        <input type="text" id="roleTitle" placeholder="e.g. IoT Firmware Engineer Intern"
+          maxlength="80" oninput="cc(this,'roleTitleCC',80)">
+        <div class="field-footer">
+          <div class="err-msg" id="roleTitleErr">Required</div>
+          <span class="char-ct" id="roleTitleCC">80 left</span>
+        </div>
+      </div>
+
+      <div class="g2">
+        <div class="fg">
+          <label>Sector / Department <span class="req">*</span></label>
+          <select id="department">
+            <option value="">Select...</option>
+            <option>AgriTech</option><option>HealthTech</option><option>EdTech</option>
+            <option>FinTech</option><option>IoT &amp; Hardware</option><option>AI / ML</option>
+            <option>SaaS / B2B</option><option>CleanTech</option><option>MedTech</option>
+            <option>Hardware</option><option>Other</option>
+          </select>
+          <div class="err-msg" id="departmentErr">Required</div>
+        </div>
+        <div class="fg">
+          <label>Work Mode <span class="req">*</span></label>
+          <select id="workMode">
+            <option value="On-site">On-site</option>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Role Description <span class="req">*</span>
+          <span class="tip" data-tip="What will the intern actually work on? Real tasks, real problems. Minimum 50 characters.">&#63;</span>
+        </label>
+        <textarea id="description" rows="4" maxlength="800"
+          placeholder="What will the intern work on? What problems will they solve? Be specific about tasks and tools they will use."
+          oninput="cc(this,'descCC',800)"></textarea>
+        <div class="field-footer">
+          <div class="err-msg" id="descriptionErr">Minimum 50 characters required</div>
+          <span class="char-ct" id="descCC">800 left</span>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Location / City</label>
+        <input type="text" id="locationCity" value="Hubballi"
+          placeholder="City where intern will report">
+        <div class="hint">For remote roles, write 'Remote -- India'</div>
+      </div>
+    </div>
+
+    <!-- 2. Who are you looking for -->
+    <div class="card">
+      <div class="sec-head">&#127979; Eligibility Criteria</div>
+
+      <div class="fg">
+        <label>Discipline / Branch Required <span class="req">*</span>
+          <span class="tip" data-tip="Select all that apply. This becomes a filter on the browse page.">&#63;</span>
+        </label>
+        <div class="disc-grid" id="discGrid">
+          <div class="disc-chip any on" data-val="Any" onclick="toggleDisc(this)">Any</div>
+          <div class="disc-chip" data-val="CSE" onclick="toggleDisc(this)">CSE</div>
+          <div class="disc-chip" data-val="ECE" onclick="toggleDisc(this)">ECE</div>
+          <div class="disc-chip" data-val="Mechanical" onclick="toggleDisc(this)">Mechanical</div>
+          <div class="disc-chip" data-val="Electrical" onclick="toggleDisc(this)">Electrical</div>
+          <div class="disc-chip" data-val="Civil" onclick="toggleDisc(this)">Civil</div>
+          <div class="disc-chip" data-val="Chemical" onclick="toggleDisc(this)">Chemical</div>
+          <div class="disc-chip" data-val="Biotechnology" onclick="toggleDisc(this)">Biotechnology</div>
+          <div class="disc-chip" data-val="Information Science" onclick="toggleDisc(this)">Information Science</div>
+          <div class="disc-chip" data-val="MBA" onclick="toggleDisc(this)">MBA</div>
+          <div class="disc-chip" data-val="BBA" onclick="toggleDisc(this)">BBA</div>
+          <div class="disc-chip" data-val="BCA" onclick="toggleDisc(this)">BCA</div>
+          <div class="disc-chip" data-val="BSc" onclick="toggleDisc(this)">BSc</div>
+          <div class="disc-chip" data-val="Biomedical" onclick="toggleDisc(this)">Biomedical</div>
+          <div class="disc-chip" data-val="Data Science" onclick="toggleDisc(this)">Data Science</div>
+        </div>
+        <div class="err-msg" id="disciplineErr">Select at least one discipline</div>
+      </div>
+
+      <div class="g3">
+        <div class="fg">
+          <label>Qualification <span class="req">*</span></label>
+          <select id="qualification">
+            <option value="Any">Any</option>
+            <option value="BE / BTech">BE / BTech</option>
+            <option value="Diploma">Diploma</option>
+            <option value="BCA">BCA</option>
+            <option value="BSc">BSc</option>
+            <option value="MBA">MBA</option>
+            <option value="MCA">MCA</option>
+            <option value="MTech / ME">MTech / ME</option>
+            <option value="MSc">MSc</option>
+            <option value="PhD">PhD</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Minimum Year of Study</label>
+          <select id="minYear">
+            <option value="Any">Any year</option>
+            <option value="1st Year">1st Year +</option>
+            <option value="2nd Year">2nd Year +</option>
+            <option value="3rd Year">3rd Year +</option>
+            <option value="Postgraduate">Postgraduate only</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Minimum CGPA
+            <span class="tip" data-tip="Leave 0 for no minimum. Shown as a badge on the internship card.">&#63;</span>
+          </label>
+          <input type="number" id="minCGPA" min="0" max="10" step="0.1"
+            value="0" placeholder="0 = no minimum">
+          <div class="hint">Out of 10. Use 0 for no cutoff.</div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Institute Preference</label>
+        <select id="institutePreference">
+          <option value="Any">Open to all colleges</option>
+          <option value="KLE Tech">KLE Technological University preferred</option>
+          <option value="Engineering only">Engineering colleges only</option>
+          <option value="Local">Local to Hubballi / Dharwad preferred</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 3. Skills -->
+    <div class="card">
+      <div class="sec-head">&#128736; Skills</div>
+
+      <div class="fg">
+        <label>Must-Have Skills <span class="req">*</span>
+          <span class="tip" data-tip="Skills the intern MUST have. Press Enter or comma to add each. Shown with filled badge on card.">&#63;</span>
+        </label>
+        <div class="tags-wrap" id="mustWrap"
+          onclick="document.getElementById('mustInput').focus()">
+          <input type="text" class="tag-input" id="mustInput"
+            placeholder="Type skill, press Enter..."
+            onkeydown="handleTag(event,'must')">
+        </div>
+        <div class="hint">e.g. Python, Arduino, Figma, SQL -- at least one required</div>
+        <div class="err-msg" id="mustSkillsErr">Add at least one must-have skill</div>
+      </div>
+
+      <div class="fg">
+        <label>Preferred Skills
+          <span class="tip" data-tip="Nice-to-have skills. Student will not be rejected for lacking these. Shown with outline badge.">&#63;</span>
+        </label>
+        <div class="tags-wrap" id="prefWrap"
+          onclick="document.getElementById('prefInput').focus()">
+          <input type="text" class="tag-input" id="prefInput"
+            placeholder="Type skill, press Enter..."
+            onkeydown="handleTag(event,'pref')">
+        </div>
+        <div class="hint">Optional. Helps students self-assess fit before applying.</div>
+      </div>
+    </div>
+
+    <!-- 4. Duration & Compensation -->
+    <div class="card">
+      <div class="sec-head">&#128197; Duration &amp; Compensation</div>
+      <div class="g3">
+        <div class="fg">
+          <label>Duration <span class="req">*</span></label>
+          <select id="durationWeeks">
+            <option value="2">2 weeks</option>
+            <option value="4">4 weeks</option>
+            <option value="6">6 weeks</option>
+            <option value="8">8 weeks</option>
+            <option value="12" selected>12 weeks (3 months)</option>
+            <option value="16">16 weeks (4 months)</option>
+            <option value="24">24 weeks (6 months)</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Positions Available <span class="req">*</span></label>
+          <input type="number" id="positions" min="1" max="20" value="1">
+          <div class="err-msg" id="positionsErr">Min 1 required</div>
+        </div>
+        <div class="fg">
+          <label>Application Deadline</label>
+          <input type="date" id="deadline">
+          <div class="hint">Optional. Role closes after this date.</div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Compensation Type <span class="req">*</span></label>
+        <div class="stipend-toggle">
+          <div class="s-opt" id="tStipend" onclick="toggleStipend(true)">
+            Stipend-Based
+          </div>
+          <div class="s-opt on" id="tAcademic" onclick="toggleStipend(false)">
+            Academic Internship
+          </div>
+        </div>
+        <div id="stipendAmtWrap" style="display:none">
+          <input type="number" id="stipend" min="0" placeholder="Monthly stipend in Rs."
+            oninput="updatePreview()">
+          <div class="hint">Amount in Indian Rupees per month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="card" id="previewCard" style="display:none">
+      <div class="sec-head">&#128065; How your card will look</div>
+      <div class="preview-card" id="cardPreview"></div>
+    </div>
+
+    <button class="btn-gold" style="width:100%;justify-content:center;padding:13px;font-size:15px"
+      id="postBtn" onclick="doPost()">
+      Post Internship Role &#8594;
+    </button>
+    <p style="font-size:11px;color:#888;text-align:center;margin-top:10px">
+      Role goes live immediately. CTIE admin is notified automatically.
+    </p>
+  </div>
+
+  <!-- Success state -->
+  <div class="success-card" id="successCard">
+    <div style="font-size:40px;margin-bottom:10px">&#127881;</div>
+    <div style="font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:4px">Role Posted!</div>
+    <div style="font-size:13px;color:#555;margin-bottom:6px" id="successRole">--</div>
+    <div class="success-id" id="successId">--</div>
+    <div style="font-size:12px;color:#888;margin-bottom:20px;line-height:1.7">
+      Your role is now live on the portal. Students can browse and apply immediately.<br>
+      CTIE admin has been notified.
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-gold" style="font-size:12px;padding:9px 18px" onclick="navPage('StartupPortal')" type="button">
+        View Applications &#8594;
+      </button>
+      <button onclick="resetForm()" class="btn-outline">Post Another Role</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+var SESSION    = null;
+var mustSkills = [];
+var prefSkills = [];
+var isPaid     = false;
+var selectedDiscs = ['Any'];
+
+// ?? SESSION CHECK ?????????????????????????????????????????????
+(function() {
+  try {
+    var saved = sessionStorage.getItem('ctie_intern_session');
+    if (!saved) { showGate(); return; }
+    var parsed = JSON.parse(saved);
+    if (!parsed.ts || Date.now() - parsed.ts > 8*60*60*1000 || !parsed.token) {
+      sessionStorage.removeItem('ctie_intern_session');
+      showGate(); return;
+    }
+    SESSION = parsed;
+    document.getElementById('postForm').style.display = 'block';
+    // Set today as default deadline (2 weeks out)
+    var d = new Date(); d.setDate(d.getDate()+14);
+    document.getElementById('deadline').value =
+      d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    // Attach preview triggers
+    ['roleTitle','department','workMode','durationWeeks','stipend']
+      .forEach(function(id){
+        var el=document.getElementById(id);
+        if(el) el.addEventListener('input', updatePreview);
+        if(el) el.addEventListener('change', updatePreview);
+      });
+  } catch(e) { showGate(); }
+})();
+
+function showGate() {
+  document.getElementById('loginGate').style.display='block';
+  document.getElementById('postForm').style.display='none';
+}
+
+// ?? DISCIPLINE CHIPS ??????????????????????????????????????????
+function toggleDisc(el) {
+  var val = el.dataset.val;
+  if (val === 'Any') {
+    // Select Any -- deselect all others
+    document.querySelectorAll('.disc-chip').forEach(function(c){
+      c.classList.toggle('on', c.dataset.val==='Any');
+    });
+    selectedDiscs = ['Any'];
+  } else {
+    // Deselect Any
+    var anyChip = document.querySelector('.disc-chip.any');
+    anyChip.classList.remove('on');
+    el.classList.toggle('on');
+    selectedDiscs = [];
+    document.querySelectorAll('.disc-chip:not(.any)').forEach(function(c){
+      if (c.classList.contains('on')) selectedDiscs.push(c.dataset.val);
+    });
+    if (selectedDiscs.length === 0) {
+      anyChip.classList.add('on');
+      selectedDiscs = ['Any'];
+    }
+  }
+  document.getElementById('disciplineErr').classList.remove('show');
+}
+
+// ?? SKILL TAGS ????????????????????????????????????????????????
+function handleTag(e, type) {
+  if (e.key !== 'Enter' && e.key !== ',') {
+    if (e.key === 'Backspace' && !e.target.value) removeLastTag(type);
+    return;
+  }
+  e.preventDefault();
+  var val = e.target.value.trim().replace(/,+$/,'');
+  if (!val) return;
+  var arr = type === 'must' ? mustSkills : prefSkills;
+  if (arr.indexOf(val) < 0 && arr.length < 12) {
+    arr.push(val);
+    renderTags(type);
+  }
+  e.target.value = '';
+  if (type === 'must') {
+    document.getElementById('mustSkillsErr').classList.remove('show');
+    document.getElementById('mustWrap').classList.remove('err-border');
+  }
+  updatePreview();
+}
+function removeLastTag(type) {
+  var arr = type === 'must' ? mustSkills : prefSkills;
+  if (arr.length) { arr.pop(); renderTags(type); updatePreview(); }
+}
+function removeTag(type, idx) {
+  var arr = type === 'must' ? mustSkills : prefSkills;
+  arr.splice(idx,1); renderTags(type); updatePreview();
+}
+function renderTags(type) {
+  var wrap  = document.getElementById(type==='must'?'mustWrap':'prefWrap');
+  var input = document.getElementById(type==='must'?'mustInput':'prefInput');
+  var arr   = type === 'must' ? mustSkills : prefSkills;
+  var cls   = type === 'must' ? 'tag-must' : 'tag-pref';
+  var btnC  = type === 'must' ? '#C8973A' : '#1A3A7C';
+  while(wrap.firstChild && wrap.firstChild !== input) wrap.removeChild(wrap.firstChild);
+  arr.forEach(function(s,i){
+    var pill = document.createElement('span');
+    pill.className = 'tag-pill ' + cls;
+    pill.innerHTML = esc(s)+'<button style="color:'+btnC+'" type="button" onclick="removeTag(\''+type+'\','+i+')">&#215;</button>';
+    wrap.insertBefore(pill, input);
+  });
+}
+
+// ?? STIPEND TOGGLE ????????????????????????????????????????????
+function toggleStipend(paid) {
+  isPaid = paid;
+  document.getElementById('tStipend').classList.toggle('on',  paid);
+  document.getElementById('tAcademic').classList.toggle('on', !paid);
+  document.getElementById('stipendAmtWrap').style.display = paid ? 'block' : 'none';
+  updatePreview();
+}
+
+// ?? CHAR COUNT ????????????????????????????????????????????????
+function cc(el, countId, max) {
+  var remaining = max - el.value.length;
+  var ct = document.getElementById(countId);
+  ct.textContent = remaining + ' left';
+  ct.className   = 'char-ct' + (remaining < max*0.1 ? ' warn' : '');
+  updatePreview();
+}
+
+// ?? LIVE PREVIEW ??????????????????????????????????????????????
+function updatePreview() {
+  var role    = document.getElementById('roleTitle').value.trim();
+  if (!role) { document.getElementById('previewCard').style.display='none'; return; }
+  document.getElementById('previewCard').style.display='block';
+
+  var startup = SESSION ? SESSION.name : 'Your Startup';
+  var sect    = document.getElementById('department').value||'--';
+  var mode    = document.getElementById('workMode').value||'On-site';
+  var weeks   = document.getElementById('durationWeeks').value||'12';
+  var pos     = document.getElementById('positions').value||'1';
+  var stipend = isPaid ? parseFloat(document.getElementById('stipend').value||0) : 0;
+  var disc    = selectedDiscs.join(', ');
+  var qual    = document.getElementById('qualification').value||'Any';
+  var cgpa    = parseFloat(document.getElementById('minCGPA').value||0);
+
+  document.getElementById('cardPreview').innerHTML =
+    '<div style="font-size:14px;font-weight:700;color:#0B1F3A;margin-bottom:4px">'
+    + esc(role) + '</div>'
+    + '<div style="font-size:12px;color:#888;margin-bottom:8px">'
+    + esc(startup) + ' &bull; ' + esc(sect) + '</div>'
+    + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">'
+    + (stipend>0
+      ? '<span style="background:#FFF3DE;color:#854F0B;border:1px solid #EF9F27;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">Rs.'+stipend.toLocaleString('en-IN')+'/mo</span>'
+      : '<span style="background:#f4f6f8;color:#666;border:1px solid #ddd;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">Academic Internship</span>')
+    + '<span style="background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">' + esc(mode) + '</span>'
+    + (cgpa>0?'<span style="background:#F3E5F5;color:#4A148C;border:1px solid #CE93D8;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700">CGPA '+cgpa+'+</span>':'')
+    + '</div>'
+    + '<div style="font-size:11px;color:#666;display:flex;gap:12px;flex-wrap:wrap">'
+    + '<span>&#128197; <strong>'+weeks+'</strong> weeks</span>'
+    + '<span>&#128100; <strong>'+pos+'</strong> position'+(pos!=='1'?'s':'')+'</span>'
+    + '<span>&#127979; '+esc(disc)+'</span>'
+    + '<span>&#127891; '+esc(qual)+'</span>'
+    + '</div>'
+    + (mustSkills.length
+      ? '<div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">'
+        + mustSkills.map(function(s){return '<span style="background:#0B1F3A;color:#C8973A;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:700">'+esc(s)+'</span>';}).join('')
+        + '</div>' : '');
+}
+
+// ?? SUBMIT ????????????????????????????????????????????????????
+function doPost() {
+  if (!SESSION) { showGate(); return; }
+
+  // Reset errors
+  document.querySelectorAll('.err-msg').forEach(function(e){e.classList.remove('show');});
+  document.querySelectorAll('.err-border').forEach(function(e){e.classList.remove('err-border');});
+  document.querySelectorAll('input.err,select.err,textarea.err')
+    .forEach(function(e){e.classList.remove('err');});
+  document.getElementById('formErr').classList.remove('show');
+
+  var ok = true;
+  function need(id, errId, msg) {
+    var el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      if(el) el.classList.add('err');
+      var er = document.getElementById(errId);
+      if(er){ er.textContent=msg||'Required'; er.classList.add('show'); }
+      ok = false;
+    }
+  }
+  function needNum(id, errId, min, msg) {
+    var el = document.getElementById(id);
+    if (!el || parseInt(el.value)<min) {
+      if(el) el.classList.add('err');
+      var er = document.getElementById(errId);
+      if(er){ er.textContent=msg||'Required'; er.classList.add('show'); }
+      ok = false;
+    }
+  }
+
+  need('roleTitle',   'roleTitleErr',   'Role title required');
+  need('department',  'departmentErr',  'Select a sector');
+  needNum('positions','positionsErr',   1, 'At least 1 position required');
+
+  var desc = document.getElementById('description').value.trim();
+  if (desc.length < 50) {
+    document.getElementById('description').classList.add('err');
+    document.getElementById('descriptionErr').classList.add('show');
+    ok = false;
+  }
+  if (mustSkills.length === 0) {
+    document.getElementById('mustWrap').classList.add('err-border');
+    document.getElementById('mustSkillsErr').classList.add('show');
+    ok = false;
+  }
+  if (selectedDiscs.length === 0) {
+    document.getElementById('disciplineErr').classList.add('show');
+    ok = false;
+  }
+
+  if (!ok) {
+    document.getElementById('formErr').textContent = 'Please fill all required fields';
+    document.getElementById('formErr').classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+
+  var btn = document.getElementById('postBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Posting...';
+
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled = false;
+      btn.innerHTML = 'Post Internship Role &#8594;';
+      if (r && r.ok) {
+        document.getElementById('postForm').style.display   = 'none';
+        document.getElementById('successCard').className    = 'success-card show';
+        document.getElementById('successRole').textContent  =
+          document.getElementById('roleTitle').value.trim();
+        document.getElementById('successId').textContent    = r.id || '--';
+      } else {
+        document.getElementById('formErr').textContent = r ? r.msg : 'Failed to post';
+        document.getElementById('formErr').classList.add('show');
+      }
+    })
+    .withFailureHandler(function(e) {
+      btn.disabled = false;
+      btn.innerHTML = 'Post Internship Role &#8594;';
+      document.getElementById('formErr').textContent = 'Error: ' + e.message;
+      document.getElementById('formErr').classList.add('show');
+    })
+    .postInternship(SESSION.token, {
+      roleTitle:           document.getElementById('roleTitle').value.trim(),
+      department:          document.getElementById('department').value,
+      discipline:          selectedDiscs.join(', '),
+      qualification:       document.getElementById('qualification').value,
+      skills:              mustSkills.join(', '),
+      skillsPreferred:     prefSkills.join(', '),
+      minCGPA:             document.getElementById('minCGPA').value || '0',
+      description:         desc,
+      durationWeeks:       document.getElementById('durationWeeks').value,
+      positions:           document.getElementById('positions').value,
+      deadline:            document.getElementById('deadline').value,
+      stipend:             isPaid ? (document.getElementById('stipend').value || '0') : '0',
+      workMode:            document.getElementById('workMode').value,
+      city:                document.getElementById('locationCity').value.trim(),
+      minYear:             document.getElementById('minYear').value,
+      institutePreference: document.getElementById('institutePreference').value,
+    });
+}
+
+function resetForm() {
+  mustSkills=[]; prefSkills=[]; isPaid=false; selectedDiscs=['Any'];
+  document.getElementById('successCard').className = 'success-card';
+  document.getElementById('postForm').style.display = 'block';
+  document.getElementById('postForm').reset();
+  renderTags('must'); renderTags('pref');
+  toggleStipend(false);
+  document.querySelectorAll('.disc-chip').forEach(function(c){
+    c.classList.toggle('on', c.dataset.val==='Any');
+  });
+  document.getElementById('previewCard').style.display='none';
+  document.getElementById('formErr').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function toast(type,msg){
+  var t=document.getElementById('toast');
+  t.className='toast '+(type==='ok'?'tok':'ter')+' show';
+  t.textContent=msg;
+  clearTimeout(t._t);
+  t._t=setTimeout(function(){t.classList.remove('show');},4000);
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
