@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Startup Guide -- KLE-CTIE Internship Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh;color:#1a1a2e}
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;border-bottom:2px solid #C8973A;
+  position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-div{width:1px;height:26px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{color:#8A9BB0;border:1px solid rgba(255,255,255,0.15);background:none;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;font-family:Arial}
+.tb-btn:hover{color:#F7F3EC}
+.hero{background:#0B1F3A;padding:40px 24px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(200,151,58,0.15);
+  border:1px solid rgba(200,151,58,0.4);border-radius:20px;
+  padding:4px 16px;font-size:11px;font-weight:700;color:#C8973A;margin-bottom:14px}
+.hero h1{font-size:26px;font-weight:300;color:#F7F3EC;margin-bottom:8px}
+.hero h1 strong{color:#C8973A;font-weight:700}
+.hero p{font-size:13px;color:#8A9BB0;max-width:500px;margin:0 auto}
+.main{max-width:800px;margin:0 auto;padding:32px 16px 80px}
+.nav-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.pill{padding:7px 16px;border-radius:20px;border:1.5px solid #e0e4ea;
+  font-size:12px;cursor:pointer;font-family:Arial;background:#fff;
+  color:#555;transition:all .15s;text-decoration:none}
+.pill:hover,.pill.on{background:#0B1F3A;color:#C8973A;border-color:#0B1F3A;font-weight:700}
+.section{margin-bottom:32px}
+.sec-title{font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;padding-bottom:10px;
+  border-bottom:2px solid #C8973A}
+.sec-icon{font-size:22px}
+.card{background:#fff;border-radius:12px;padding:18px 20px;
+  border:1px solid #e8eaed;margin-bottom:10px}
+.card h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px}
+.card p{font-size:13px;color:#555;line-height:1.6}
+.card .sub{font-size:11px;color:#888;margin-top:5px;font-style:italic}
+.info-box{border-radius:10px;padding:14px 16px;margin-bottom:10px;
+  font-size:13px;line-height:1.7}
+.ib-navy{background:#E8EFF8;border:1px solid #B0C4E0;color:#1a1a2e}
+.ib-gold{background:#FFF8E1;border:1px solid #FFD54F;color:#5D4037}
+.ib-red{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.ib-green{background:#E8F5E9;border:1px solid #81C784;color:#1B5E20}
+strong.lbl{display:block;font-weight:700;margin-bottom:4px}
+.sla-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.sla-table th{background:#0B1F3A;color:#C8973A;padding:8px 12px;
+  text-align:left;font-size:11px}
+.sla-table td{padding:8px 12px;border-bottom:1px solid #f0f0f0;color:#444}
+.sla-table tr:nth-child(even) td{background:#f8f9fa}
+.sla-table .danger{color:#B71C1C;font-weight:700}
+.faq-item{background:#fff;border-radius:10px;border:1px solid #e8eaed;margin-bottom:8px}
+.faq-q{padding:13px 16px;font-size:13px;font-weight:700;color:#1a1a2e;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q:hover{background:#fafafa}
+.faq-arrow{font-size:11px;color:#888;transition:transform .2s}
+.faq-a{padding:0 16px;font-size:13px;color:#555;line-height:1.7;
+  max-height:0;overflow:hidden;transition:all .3s}
+.faq-item.open .faq-a{padding:0 16px 13px;max-height:300px}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.step{background:#fff;border-radius:12px;padding:16px 18px;
+  border:1px solid #e8eaed;display:flex;gap:14px;align-items:flex-start;margin-bottom:10px}
+.step-num{width:32px;height:32px;border-radius:50%;background:#C8973A;
+  color:#0B1F3A;font-size:13px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:2px}
+.step-body h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px}
+.step-body p{font-size:13px;color:#555;line-height:1.6}
+.cta-box{background:#0B1F3A;border-radius:14px;padding:24px;text-align:center;margin-top:24px}
+.cta-box h3{font-size:16px;font-weight:700;color:#C8973A;margin-bottom:8px}
+.cta-box p{font-size:13px;color:#8A9BB0;margin-bottom:16px}
+.cta-btn{display:inline-block;background:#C8973A;color:#0B1F3A;
+  padding:11px 24px;border-radius:8px;font-size:13px;font-weight:700;
+  text-decoration:none;margin:4px}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div>
+      <div class="tb-title">Startup Guide</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('StartupPortal')" type="button">My Portal</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Startup Guide</div>
+  <h1>How to find and manage <strong>interns</strong></h1>
+  <p>Everything you need -- from posting your first role to issuing the completion certificate.</p>
+</div>
+
+<div class="main">
+  <div class="nav-pills">
+    <a href="#login" class="pill on" target="_top">Login & PIN</a>
+    <a href="#post" class="pill" target="_top">Posting a role</a>
+    <a href="#manage" class="pill" target="_top">Managing applicants</a>
+    <a href="#reschedule" class="pill" target="_top">Reschedule rules</a>
+    <a href="#progress" class="pill" target="_top">Weekly logs</a>
+    <a href="#sla" class="pill" target="_top">SLA deadlines</a>
+    <a href="#faq" class="pill" target="_top">FAQ</a>
+  </div>
+
+  <!-- Login -->
+  <div class="section" id="login">
+    <div class="sec-title"><span class="sec-icon">&#128274;</span>Login and PIN setup</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Go to the Startup Portal</h3>
+        <p>Visit the portal URL and click "Startup Login". Enter your Startup ID
+          (format: CTIE-YYYY-NNN, given to you by CTIE admin) and choose a PIN.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>First login sets your PIN permanently</h3>
+        <p>On your very first login, whatever PIN you enter becomes your permanent portal PIN.
+          Use at least 4 digits. Choose something you will remember -- there is no "forgot PIN"
+          link. Contact ctie [at] kletech.ac.in to reset if needed.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Your session stays alive for 8 hours</h3>
+        <p>Once logged in, you stay logged in for 8 hours even if you navigate between pages
+          or refresh. Closing the browser tab logs you out. Do not share your PIN with anyone
+          outside your core team.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posting -->
+  <div class="section" id="post">
+    <div class="sec-title"><span class="sec-icon">&#128196;</span>Posting an internship role</div>
+    <div class="info-box ib-navy">
+      Posting takes under 4 minutes. Fill in the structured form -- the better your JD,
+      the more relevant the applications you receive. Your role goes live immediately.
+    </div>
+    <div class="card">
+      <h3>Discipline and qualification fields</h3>
+      <p>Select which engineering or management disciplines are relevant. This becomes a
+        filter that students use on the browse page. Selecting "Any" means all students
+        can see and apply for your role.</p>
+    </div>
+    <div class="card">
+      <h3>Must-have vs preferred skills</h3>
+      <p>Must-have skills are shown with a filled badge -- students understand they need
+        all of these. Preferred skills have an outline badge -- nice to have, not mandatory.
+        Being clear here reduces mismatched applications.</p>
+    </div>
+    <div class="card">
+      <h3>CGPA cutoff</h3>
+      <p>Set a minimum CGPA if required. This is shown as a badge on your internship card
+        so students self-filter before applying. Leave at 0 for no cutoff.</p>
+      <p class="sub">Note: students still apply even below your cutoff -- you decide in review.</p>
+    </div>
+    <div class="card">
+      <h3>Stipend vs Academic Internship</h3>
+      <p>Select Stipend-Based and enter the monthly amount in Rupees, or select
+        Academic Internship for curriculum-credit / learning-based roles with no monetary
+        compensation. Both appear on the portal -- students filter by their preference.</p>
+    </div>
+  </div>
+
+  <!-- Managing -->
+  <div class="section" id="manage">
+    <div class="sec-title"><span class="sec-icon">&#128100;</span>Managing applicants</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Review applications</h3>
+        <p>Go to your portal > Applicants tab. See all applications in a table with
+          resume links inline. Click Shortlist (sends candidate a notification) or
+          Reject (sends a polite decline email). You have 7 working days to review.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Schedule the interview</h3>
+        <p>After shortlisting, click Schedule for any candidate. Set date, time, mode,
+          and paste a Google Meet link if online. The student gets a calendar invite
+          on both their email addresses automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Enter outcome within 48 hours</h3>
+        <p>After the interview date passes, click Outcome for that candidate.
+          Choose Selected, Not Selected, or Reschedule (if applicable).
+          You must do this within 48 hours of the interview.</p>
+        <p class="sub">Selected triggers an OTP to the student's institute email for acceptance.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Wait for OTP confirmation</h3>
+        <p>Once you mark Selected, the student gets a 6-digit OTP. When they confirm it,
+          their status changes to Selected and you can begin onboarding. You are notified
+          by email when they confirm.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reschedule rules -->
+  <div class="section" id="reschedule">
+    <div class="sec-title"><span class="sec-icon">&#8635;</span>Reschedule rules -- read carefully</div>
+    <div class="info-box ib-red">
+      <strong class="lbl">Maximum 2 reschedules per application. No exceptions.</strong>
+      This rule exists to protect students' time. The system enforces it at three points --
+      you cannot override it once the limit is reached.
+    </div>
+    <div class="card">
+      <h3>Reschedule 1 -- allowed, no warning</h3>
+      <p>You can reschedule an interview once without any consequences. The student is
+        notified with the new slot details and a note showing "Reschedule 1 of 2 used".</p>
+    </div>
+    <div class="card">
+      <h3>Reschedule 2 -- allowed, with final warning</h3>
+      <p>A second reschedule is permitted, but both you and the student see a prominent
+        warning: <em>"This is the final reschedule. No further rescheduling permitted."</em>
+        If this interview does not proceed, the application will be closed.</p>
+    </div>
+    <div class="info-box ib-red">
+      <strong class="lbl">Reschedule 3 -- blocked automatically</strong>
+      The system blocks the third reschedule attempt. The application is auto-closed,
+      the student is notified with a clear explanation, CTIE admin is alerted, and
+      your Reschedule Strike count increments. CTIE management can see this.
+    </div>
+    <div class="card">
+      <h3>Reschedule from outcome screen</h3>
+      <p>If you conducted the interview but need to see the student again, you can also
+        select "Reschedule" as the outcome on the outcome entry screen. This still counts
+        toward the 2-reschedule limit.</p>
+    </div>
+  </div>
+
+  <!-- Weekly progress -->
+  <div class="section" id="progress">
+    <div class="sec-title"><span class="sec-icon">&#128202;</span>Logging weekly progress</div>
+    <div class="info-box ib-green">
+      Every Monday, you receive an automatic reminder to log the previous week's progress
+      for each active intern. This feeds into CTIE's impact reporting and the student's
+      completion certificate.
+    </div>
+    <div class="card">
+      <h3>What to log each week</h3>
+      <p>Days present (out of 5 or 6), tasks assigned, tasks completed, a performance
+        rating (1-5 stars), and optional comments for the intern. The student can see
+        this feedback in their tracker.</p>
+    </div>
+    <div class="card">
+      <h3>Marking internship complete</h3>
+      <p>When the internship ends, go to Active Interns > select the intern > Mark Complete.
+        Set the end date, give a final rating and short feedback. The system generates
+        a completion certificate and emails it to both the student's addresses immediately.</p>
+    </div>
+  </div>
+
+  <!-- SLA -->
+  <div class="section" id="sla">
+    <div class="sec-title"><span class="sec-icon">&#9201;</span>SLA deadlines you must meet</div>
+    <table class="sla-table">
+      <thead>
+        <tr><th>Stage</th><th>Deadline</th><th>Day of nudge</th><th>If missed</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Review applications</td><td>7 working days</td>
+          <td>Day 7: email reminder</td>
+          <td class="danger">Day 14: auto-close, student notified</td>
+        </tr>
+        <tr>
+          <td>Schedule interview (after shortlist)</td><td>5 days</td>
+          <td>Day 5: email reminder</td>
+          <td class="danger">Day 10: auto-close, student notified</td>
+        </tr>
+        <tr>
+          <td>Enter outcome (after interview)</td><td>48 hours</td>
+          <td>24h + 48h: urgent emails</td>
+          <td class="danger">96h: auto-close + CTIE admin alerted</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="info-box ib-gold" style="margin-top:12px">
+      <strong class="lbl">Why these deadlines matter</strong>
+      Students often have competing opportunities. When you delay, they lose time they
+      could spend applying elsewhere. Repeated SLA breaches are tracked and visible to
+      CTIE management. Startups with too many violations may have posting access reviewed.
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="sec-title"><span class="sec-icon">&#10067;</span>Frequently asked questions</div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        I forgot my PIN. How do I reset it? <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-a">Email ctie [at] kletech.ac.in from your registered startup contact email.
+        CTIE admin will reset your PIN hash in the system and you can set a new PIN on next login.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can I edit an internship after posting? <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-a">Currently you cannot edit a live posting directly. If you need to
+        make a significant change, close the existing role and post a corrected one.
+        Minor corrections can be done by contacting ctie [at] kletech.ac.in.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        A student confirmed but is now not joining. What do I do? <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-a">Contact ctie [at] kletech.ac.in. The admin can reset the application status
+        so you can select another candidate. The confirmed position count will also be adjusted.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        How many roles can I post at the same time? <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-a">There is no hard limit. However, please post only roles you genuinely
+        intend to fill. Unused postings that expire without any reviews reflect poorly on your
+        startup's reliability score.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Can students from outside Karnataka apply? <span class="faq-arrow">&#9660;</span>
+      </div>
+      <div class="faq-a">Yes. The portal is open to students from any college across India.
+        If you prefer local students, set the Institute Preference to "Local to Hubballi / Dharwad"
+        when posting -- this is shown on your card so distant students know upfront.</div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h3>Ready to find your intern?</h3>
+    <p>Log in to your startup portal and post your first role.</p>
+    <button class="cta-btn" onclick="navPage('StartupPortal')" type="button">Go to Startup Portal &#8594;</button>
+  </div>
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+function toggleFaq(el){
+  var item=el.closest('.faq-item');
+  var isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');});
+  if(!isOpen)item.classList.add('open');
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
