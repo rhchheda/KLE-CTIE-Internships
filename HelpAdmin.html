@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTIE Admin Guide -- KLE-CTIE Internship Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh;color:#1a1a2e}
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;border-bottom:2px solid #C8973A;
+  position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-div{width:1px;height:26px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{color:#8A9BB0;border:1px solid rgba(255,255,255,0.15);background:none;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;font-family:Arial}
+.tb-btn:hover{color:#F7F3EC}
+.hero{background:#0B1F3A;padding:40px 24px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(200,151,58,0.15);
+  border:1px solid rgba(200,151,58,0.4);border-radius:20px;
+  padding:4px 16px;font-size:11px;font-weight:700;color:#C8973A;margin-bottom:14px}
+.hero h1{font-size:26px;font-weight:300;color:#F7F3EC;margin-bottom:8px}
+.hero h1 strong{color:#C8973A;font-weight:700}
+.hero p{font-size:13px;color:#8A9BB0;max-width:500px;margin:0 auto}
+.main{max-width:800px;margin:0 auto;padding:32px 16px 80px}
+.nav-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.pill{padding:7px 16px;border-radius:20px;border:1.5px solid #e0e4ea;
+  font-size:12px;cursor:pointer;font-family:Arial;background:#fff;
+  color:#555;transition:all .15s;text-decoration:none}
+.pill:hover,.pill.on{background:#0B1F3A;color:#C8973A;border-color:#0B1F3A;font-weight:700}
+.section{margin-bottom:32px}
+.sec-title{font-size:18px;font-weight:700;color:#1a1a2e;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;padding-bottom:10px;
+  border-bottom:2px solid #C8973A}
+.sec-icon{font-size:22px}
+.card{background:#fff;border-radius:12px;padding:16px 18px;
+  border:1px solid #e8eaed;margin-bottom:10px}
+.card h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:5px}
+.card p{font-size:13px;color:#555;line-height:1.6}
+.code-block{background:#0B1F3A;border-radius:8px;padding:12px 14px;
+  font-size:12px;font-family:monospace;color:#C8973A;margin:8px 0;
+  line-height:1.7;overflow-x:auto}
+.info-box{border-radius:10px;padding:14px 16px;margin-bottom:10px;
+  font-size:13px;line-height:1.7}
+.ib-navy{background:#E8EFF8;border:1px solid #B0C4E0;color:#0B1F3A}
+.ib-gold{background:#FFF8E1;border:1px solid #FFD54F;color:#5D4037}
+.ib-red{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.ib-green{background:#E8F5E9;border:1px solid #81C784;color:#1B5E20}
+strong.lbl{display:block;font-weight:700;margin-bottom:4px}
+.trigger-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.trigger-table th{background:#0B1F3A;color:#C8973A;padding:7px 12px;text-align:left;font-size:11px}
+.trigger-table td{padding:7px 12px;border-bottom:1px solid #f0f0f0;color:#444}
+.trigger-table tr:nth-child(even) td{background:#f8f9fa}
+.sheet-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.sheet-table th{background:#f4f6f9;color:#555;padding:7px 12px;
+  text-align:left;font-size:11px;font-weight:700}
+.sheet-table td{padding:7px 12px;border-bottom:1px solid #f0f0f0;color:#444;
+  vertical-align:top}
+.sheet-table tr:hover td{background:#FFFBF4}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div>
+      <div class="tb-title">CTIE Admin Guide</div>
+      <div class="tb-sub">KLE-CTIE Internship Portal</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('Admin')" type="button">Admin Dashboard</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">CTIE Admin Guide</div>
+  <h1>Running the <strong>Internship Platform</strong></h1>
+  <p>Setup, monitoring, SLA management, reporting, and import/export -- all in one place.</p>
+</div>
+
+<div class="main">
+  <div class="nav-pills">
+    <a href="#setup" class="pill on" target="_top">Initial Setup</a>
+    <a href="#monitor" class="pill" target="_top">Monitoring</a>
+    <a href="#sla" class="pill" target="_top">SLA & Triggers</a>
+    <a href="#startups" class="pill" target="_top">Managing Startups</a>
+    <a href="#import" class="pill" target="_top">Import / Export</a>
+    <a href="#reports" class="pill" target="_top">Reports</a>
+    <a href="#config" class="pill" target="_top">Configuration</a>
+  </div>
+
+  <!-- Setup -->
+  <div class="section" id="setup">
+    <div class="sec-title"><span class="sec-icon">&#9881;</span>Initial one-time setup</div>
+    <div class="card">
+      <h3>Step 1 -- Create the Google Sheet</h3>
+      <p>Create a new Google Sheet named "KLE-CTIE Internship Platform". Copy the Sheet ID
+        from the URL (the long string between /d/ and /edit).</p>
+    </div>
+    <div class="card">
+      <h3>Step 2 -- Paste Sheet ID into Code.gs</h3>
+      <p>Open Code_production.gs in Apps Script. Find line 1:</p>
+      <div class="code-block">var SHEET_ID = 'PASTE_YOUR_INTERNSHIP_SHEET_ID_HERE';</div>
+      <p>Replace with your actual Sheet ID.</p>
+    </div>
+    <div class="card">
+      <h3>Step 3 -- Run setup functions (in this order)</h3>
+      <div class="code-block">setupSheets()   // Creates 5 sheet tabs + CONFIG defaults
+setupTriggers() // Installs 3 daily SLA triggers
+seedAll()       // Loads sample data for dry run (from SeedData.gs)</div>
+    </div>
+    <div class="card">
+      <h3>Step 4 -- Upload logos and set Script Properties</h3>
+      <p>Upload KLE and CTIE logos to Google Drive. Make them public (Anyone with link > Viewer).
+        Then run in Apps Script editor:</p>
+      <div class="code-block">var props = PropertiesService.getScriptProperties();
+props.setProperty('kle_logo_id',  'YOUR_KLE_LOGO_DRIVE_FILE_ID');
+props.setProperty('ctie_logo_id', 'YOUR_CTIE_LOGO_DRIVE_FILE_ID');
+props.setProperty('LOGO_KLE_URL',  'https://drive.google.com/uc?id=KLE_FILE_ID');
+props.setProperty('LOGO_CTIE_URL', 'https://drive.google.com/uc?id=CTIE_FILE_ID');
+props.setProperty('RESUME_FOLDER_ID', 'YOUR_RESUMES_FOLDER_ID');</div>
+    </div>
+    <div class="card">
+      <h3>Step 5 -- Deploy as Web App</h3>
+      <p>Apps Script > Deploy > New Deployment > Web App.<br>
+        Execute as: <strong>Me</strong> &nbsp;&bull;&nbsp; Access: <strong>Anyone</strong><br>
+        Copy the <strong>/exec</strong> URL -- this is your public portal URL.</p>
+    </div>
+    <div class="card">
+      <h3>Step 6 -- Optional: Link to TBI main system</h3>
+      <p>If you want the internship confirmation count to auto-sync to the TBI Impact dashboard:</p>
+      <div class="code-block">props.setProperty('TBI_SHEET_ID', 'YOUR_TBI_SHEET_ID');
+// Also ensure TBI CONFIG sheet has a row: intern_confirmed_count | 0</div>
+    </div>
+  </div>
+
+  <!-- Monitoring -->
+  <div class="section" id="monitor">
+    <div class="sec-title"><span class="sec-icon">&#128202;</span>Day-to-day monitoring</div>
+    <div class="info-box ib-green">
+      <strong class="lbl">Your daily summary</strong>
+      The Admin Dashboard shows: total applications by status, SLA violations (red),
+      startups with reschedule strikes, and a live internship count. Check it once a week --
+      the system handles everything else automatically.
+    </div>
+    <div class="card">
+      <h3>What the system does automatically (you do not need to intervene)</h3>
+      <p>&#10003; Nudges startups on days 7, 5, 24h, 48h as appropriate<br>
+         &#10003; Auto-closes stale applications on days 14, 10, 96h<br>
+         &#10003; Emails students when their application is closed<br>
+         &#10003; Alerts you at 96h when a startup has not entered outcome<br>
+         &#10003; Blocks third reschedule attempts and alerts you<br>
+         &#10003; Syncs internship count to TBI system on every confirmation</p>
+    </div>
+    <div class="card">
+      <h3>When you need to intervene</h3>
+      <p>&#9888; A startup's PIN needs resetting (they emailed you)<br>
+         &#9888; A confirmed student is not joining (status needs manual reset)<br>
+         &#9888; A startup has serial SLA violations (conversation needed)<br>
+         &#9888; A student reports a genuine problem beyond automated handling</p>
+    </div>
+  </div>
+
+  <!-- SLA & Triggers -->
+  <div class="section" id="sla">
+    <div class="sec-title"><span class="sec-icon">&#9201;</span>SLA enforcement and triggers</div>
+    <table class="trigger-table">
+      <thead>
+        <tr><th>Trigger function</th><th>Runs at</th><th>What it does</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>dailySLACheck</td><td>8 AM IST</td>
+          <td>Calls checkReviewSLA_ + checkScheduleSLA_. Nudges and auto-closes stale applications.</td></tr>
+        <tr><td>outcomeCheckMorning</td><td>10 AM IST</td>
+          <td>Scans all Interview Scheduled apps. Sends 24h/48h nudges. Auto-closes at 96h.</td></tr>
+        <tr><td>outcomeCheckEvening</td><td>6 PM IST</td>
+          <td>Same as morning check. Runs twice to catch afternoon interviews faster.</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box ib-gold" style="margin-top:10px">
+      <strong class="lbl">If triggers stop working</strong>
+      Go to Apps Script editor > Triggers (alarm clock icon). If triggers are missing,
+      run <span style="font-family:monospace">setupTriggers()</span> again from the editor.
+      Triggers can be removed accidentally if the project is re-deployed.
+    </div>
+  </div>
+
+  <!-- Startups -->
+  <div class="section" id="startups">
+    <div class="sec-title"><span class="sec-icon">&#127970;</span>Managing startups</div>
+    <div class="card">
+      <h3>Adding a new startup</h3>
+      <p>Add a row to the STARTUPS sheet with all required columns. Set Active to TRUE.
+        Leave PIN_Hash and PIN_Salt blank -- the startup sets their own PIN on first login.
+        Share their Startup ID (format: CTIE-YYYY-NNN) with them.</p>
+    </div>
+    <div class="card">
+      <h3>Deactivating a startup</h3>
+      <p>Set the Active column to FALSE in the STARTUPS sheet. Their login will be blocked
+        and their open roles will no longer appear to students. Existing applications are preserved.</p>
+    </div>
+    <div class="card">
+      <h3>Resetting a startup PIN</h3>
+      <p>Clear the PIN_Hash and PIN_Salt columns for that startup row in the STARTUPS sheet.
+        On next login, the startup will set a new PIN automatically.</p>
+    </div>
+    <div class="card">
+      <h3>Reschedule Strikes column</h3>
+      <p>Each time a startup exhausts the 2-reschedule limit, their Reschedule_Strikes
+        counter increments. This is your indicator for which startups need a conversation
+        about candidate experience.</p>
+    </div>
+  </div>
+
+  <!-- Import / Export -->
+  <div class="section" id="import">
+    <div class="sec-title"><span class="sec-icon">&#128196;</span>Import and export</div>
+    <div class="card">
+      <h3>Importing startups in bulk</h3>
+      <p>Use the Startup Master CSV template. Fill in all columns following the headers
+        exactly (no column renames). Upload via Admin Dashboard > Import > Startups.
+        The system validates each row before inserting.</p>
+    </div>
+    <div class="card">
+      <h3>Importing historical internship data</h3>
+      <p>For historical records from before the platform, use the Applications CSV template.
+        Set Status column to "Completed" for past internships so they count in reports
+        without triggering SLA triggers.</p>
+    </div>
+    <div class="card">
+      <h3>Exporting for DST / NIDHI / TIDE reports</h3>
+      <p>Admin Dashboard > Reports > Scheme-wise report. Filter by scheme (NIDHI-SSS, SISFS, TIDE).
+        Download as CSV. The columns match the quarterly submission format for each scheme.</p>
+    </div>
+    <div class="card">
+      <h3>Clearing seed / test data</h3>
+      <p>Run <span style="font-family:monospace;font-size:12px">clearSeedData()</span>
+        from the Apps Script editor. This removes all rows from STARTUPS, INTERNSHIPS,
+        APPLICATIONS, and PROGRESS while preserving headers. Do this before going live
+        with real data.</p>
+    </div>
+  </div>
+
+  <!-- Reports -->
+  <div class="section" id="reports">
+    <div class="sec-title"><span class="sec-icon">&#128217;</span>Reports for scheme compliance</div>
+    <table class="sheet-table">
+      <thead>
+        <tr><th>Report</th><th>Use for</th><th>Key fields</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Monthly Summary</strong></td>
+          <td>Internal review, board meetings</td>
+          <td>Posted, filled, completed, fill rate, sector split</td></tr>
+        <tr><td><strong>Startup Performance</strong></td>
+          <td>Startup accountability review</td>
+          <td>Per startup: applications, selection rate, completion rate, reschedule strikes</td></tr>
+        <tr><td><strong>Scheme-wise</strong></td>
+          <td>DST, NIDHI, MeitY quarterly reports</td>
+          <td>Filter by NIDHI-SSS / SISFS / TIDE. Internship count per scheme startup.</td></tr>
+        <tr><td><strong>Student Diversity</strong></td>
+          <td>Impact reports, DST annual assessment</td>
+          <td>College distribution, discipline, year of study, gender (if captured)</td></tr>
+        <tr><td><strong>SLA Violations</strong></td>
+          <td>Internal quality review</td>
+          <td>Auto-closed counts by startup, by reason (no review / no schedule / no outcome)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Config -->
+  <div class="section" id="config">
+    <div class="sec-title"><span class="sec-icon">&#128295;</span>Configuration values</div>
+    <div class="info-box ib-navy">
+      All SLA thresholds are configurable in the CONFIG sheet without touching code.
+      Change a value in the CONFIG sheet -- it takes effect from the next trigger run.
+    </div>
+    <table class="sheet-table">
+      <thead>
+        <tr><th>CONFIG key</th><th>Default</th><th>What it controls</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>max_reschedules</td><td>2</td><td>Maximum reschedules per application before auto-close</td></tr>
+        <tr><td>review_sla_days</td><td>7</td><td>Days before startup is nudged to review applications</td></tr>
+        <tr><td>review_close_days</td><td>14</td><td>Days before unreviewed applications auto-close</td></tr>
+        <tr><td>schedule_sla_days</td><td>5</td><td>Days before shortlisted-but-unscheduled nudge</td></tr>
+        <tr><td>outcome_nudge_h</td><td>24</td><td>Hours after interview before first outcome nudge</td></tr>
+        <tr><td>outcome_urgent_h</td><td>48</td><td>Hours before second nudge + student status change</td></tr>
+        <tr><td>outcome_close_h</td><td>96</td><td>Hours before auto-close + CTIE admin alert</td></tr>
+        <tr><td>otp_minutes</td><td>10</td><td>OTP validity duration in minutes</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box ib-gold" style="margin-top:10px">
+      Note: Changing CONFIG values in the sheet does not automatically update the JavaScript
+      constants in Code.gs. The constants in Code.gs are used as defaults when CONFIG is empty.
+      For changes to take effect, either update both, or ensure Code.gs reads from CONFIG
+      at runtime (future enhancement).
+    </div>
+  </div>
+</div>
+
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+</script>
+</body>
+</html>
