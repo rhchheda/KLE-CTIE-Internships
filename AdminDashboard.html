@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTIE Admin Dashboard -- Internship Platform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f0f4f8;min-height:100vh;color:#1a1a2e}
+.topbar{background:#0B1F3A;padding:0 24px;display:flex;align-items:center;
+  justify-content:space-between;height:58px;border-bottom:2px solid #C8973A;
+  position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-logo{height:34px;object-fit:contain}
+.tb-div{width:1px;height:26px;background:rgba(200,151,58,0.3)}
+.tb-title{font-size:13px;font-weight:700;color:#C8973A}
+.tb-sub{font-size:10px;color:#6B8099}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-logo-r{height:32px;object-fit:contain;opacity:0.85}
+.tb-btn{color:#8A9BB0;border:1px solid rgba(255,255,255,0.15);background:none;
+  padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;
+  text-decoration:none;font-family:Arial;transition:all .2s}
+.tb-btn:hover{color:#F7F3EC}
+.tb-btn-gold{background:rgba(200,151,58,0.12);border:1px solid rgba(200,151,58,0.4);
+  color:#C8973A;padding:5px 14px;border-radius:20px;font-size:11px;
+  cursor:pointer;font-family:Arial;font-weight:700}
+
+/* Login overlay */
+.login-overlay{position:fixed;inset:0;background:#0B1F3A;z-index:200;
+  display:flex;align-items:center;justify-content:center}
+.login-card{background:#fff;border-radius:16px;padding:32px 28px;
+  width:100%;max-width:360px;text-align:center}
+.lc-logos{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px}
+.lc-logo{height:32px;object-fit:contain}
+.lc-div{width:1px;height:26px;background:#e8eaed}
+.lc-title{font-size:17px;font-weight:700;color:#0B1F3A;margin-bottom:6px}
+.lc-sub{font-size:12px;color:#888;margin-bottom:18px;line-height:1.6}
+.lc-err{background:#FFEBEE;border:1px solid #FFCDD2;border-radius:7px;
+  padding:8px 12px;font-size:12px;color:#C62828;margin-bottom:12px;display:none}
+.lc-err.show{display:block}
+.fg{margin-bottom:12px;text-align:left}
+.fg label{display:block;font-size:10px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:#666;margin-bottom:5px}
+.fg input{width:100%;padding:10px 13px;border:1.5px solid #e0e4ea;border-radius:8px;
+  font-size:13px;outline:none;font-family:Arial}
+.fg input:focus{border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+.btn-gold{background:linear-gradient(135deg,#C8973A,#A06B18);border:none;
+  color:#0B1F3A;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:Arial;width:100%;transition:all .2s}
+.btn-gold:hover{box-shadow:0 4px 16px rgba(200,151,58,0.4)}
+.btn-gold:disabled{background:#ccc;color:#888;cursor:not-allowed}
+.spin{display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+  border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Main layout */
+.main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+.page-head{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-head h1{font-size:20px;font-weight:700;color:#1a1a2e}
+.page-head p{font-size:12px;color:#888;margin-top:2px}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:#fff;border-radius:10px;padding:14px;
+  border:1px solid #e8eaed;text-align:center}
+.stat-val{font-size:26px;font-weight:700;color:#0B1F3A;line-height:1}
+.stat-lbl{font-size:10px;color:#888;margin-top:4px}
+.stat-card.danger .stat-val{color:#B71C1C}
+.stat-card.warn .stat-val{color:#E65100}
+
+/* Tabs */
+.tab-bar{display:flex;gap:4px;border-bottom:2px solid #e8eaed;margin-bottom:18px;overflow-x:auto}
+.tab{padding:9px 16px;font-size:12px;font-weight:600;color:#888;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
+.tab.on{color:#C8973A;border-bottom-color:#C8973A}
+.tab-panel{display:none}.tab-panel.on{display:block}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.flt{border:1.5px solid #e0e4ea;border-radius:8px;padding:8px 12px;
+  font-size:12px;background:#fff;outline:none;cursor:pointer;font-family:Arial;color:#444}
+.flt:focus{border-color:#C8973A}
+.srch{flex:1;min-width:180px;border:1.5px solid #e0e4ea;border-radius:8px;
+  padding:8px 12px;font-size:12px;outline:none;font-family:Arial}
+.srch:focus{border-color:#C8973A}
+
+/* Modal (Add Startup) */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:24px;width:100%;max-width:520px;
+  max-height:90vh;overflow-y:auto}
+.modal-title{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:14px}
+.modal-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;
+  color:#888;line-height:1;margin-top:-4px}
+.modal-close:hover{color:#333}
+.modal .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal .fg{margin-bottom:12px}
+.modal .fg label{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:#666;margin-bottom:5px}
+.modal .fg input,.modal .fg select,.modal .fg textarea{width:100%;padding:9px 12px;
+  border:1.5px solid #e0e4ea;border-radius:8px;font-size:13px;outline:none;
+  font-family:Arial;background:#fff}
+.modal .fg input:focus,.modal .fg select:focus,.modal .fg textarea:focus{
+  border-color:#C8973A;box-shadow:0 0 0 3px rgba(200,151,58,0.1)}
+.modal .req{color:#E24B4A}
+.logo-preview{width:56px;height:56px;border:1.5px solid #e8eaed;border-radius:8px;
+  object-fit:contain;background:#f8f9fa;margin-top:6px}
+.add-startup-btn{margin-bottom:14px}
+
+/* Table */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{background:#f4f6f9;color:#555;font-size:10px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;padding:8px 12px;
+  text-align:left;border-bottom:2px solid #e8eaed;white-space:nowrap}
+.data-table td{padding:9px 12px;border-bottom:1px solid #f0f0f0;
+  vertical-align:middle;color:#444}
+.data-table tr:hover td{background:#fafafa}
+.bold{font-weight:700;color:#1a1a2e}
+.sub{font-size:11px;color:#888}
+
+/* Status badges */
+.badge{display:inline-block;font-size:10px;padding:2px 8px;
+  border-radius:9px;font-weight:700;white-space:nowrap}
+.b-gold{background:#FFF3DE;color:#854F0B;border:1px solid #EF9F27}
+.b-blue{background:#E3F2FD;color:#0D47A1;border:1px solid #90CAF9}
+.b-purple{background:#F3E5F5;color:#4A148C;border:1px solid #CE93D8}
+.b-teal{background:#E0F2F1;color:#004D40;border:1px solid #80CBC4}
+.b-green{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.b-red{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+.b-gray{background:#f4f6f8;color:#666;border:1px solid #ddd}
+.b-amber{background:#FFF3E0;color:#E65100;border:1px solid #FFB74D}
+
+/* SLA alert rows */
+.sla-row td{background:#FFF3E0!important;border-bottom:1px solid #FFB74D}
+.sla-row:hover td{background:#FFE0B2!important}
+.overdue-row td{background:#FFEBEE!important;border-bottom:1px solid #EF9A9A}
+
+/* Action buttons */
+.act-btn{padding:4px 10px;border-radius:6px;font-size:10px;font-weight:700;
+  cursor:pointer;font-family:Arial;border:1.5px solid;transition:all .15s}
+.ab-blue{color:#0D47A1;border-color:#90CAF9;background:#E3F2FD}
+.ab-red{color:#B71C1C;border-color:#EF9A9A;background:#FFEBEE}
+.ab-gray{color:#555;border-color:#ddd;background:#f8f9fa}
+
+/* Empty state */
+.empty{text-align:center;padding:40px;color:#aaa;font-size:13px}
+
+
+/* Toast */
+.toast{position:fixed;bottom:60px;right:18px;z-index:9998;
+  padding:11px 16px;border-radius:9px;font-size:12px;font-weight:600;
+  max-width:320px;box-shadow:0 6px 20px rgba(0,0,0,0.2);display:none}
+.toast.show{display:block}
+.tok{background:#E8F5E9;color:#1B5E20;border:1px solid #81C784}
+.ter{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .filter-bar{flex-direction:column}
+  .srch{width:100%}
+}
+.site-footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  background:rgba(11,31,58,0.95);
+  border-top:1px solid rgba(200,151,58,0.3);
+  padding:7px 14px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;flex-wrap:wrap;text-align:center;
+  font-size:11px;color:rgba(247,243,236,0.75)}
+.site-footer .rhc-heart{
+  color:#E24B4A;display:inline-block;
+  animation:rhc-hb 0.9s ease-in-out infinite}
+.site-footer .sf-div{color:rgba(200,151,58,0.45)}
+.site-footer .sf-updated{color:#C8973A;font-weight:600}
+@keyframes rhc-hb{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.4)}}
+body{padding-bottom:38px}
+.scroll-top{
+  position:fixed;bottom:56px;right:18px;z-index:9998;
+  width:36px;height:36px;border-radius:50%;
+  background:#0B1F3A;border:1.5px solid rgba(200,151,58,0.5);
+  color:#C8973A;font-size:16px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:opacity .2s;font-family:Arial}
+.scroll-top.show{display:flex}
+</style>
+</head>
+<body>
+
+<!-- Login overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="lc-logos">
+      <img class="lc-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+        onerror="this.style.display='none'">
+      <div class="lc-div"></div>
+      <img class="lc-logo" src="<?= CTIE_LOGO ?>" alt="CTIE"
+        onerror="this.style.display='none'">
+    </div>
+    <div class="lc-title">CTIE Admin Login</div>
+    <div class="lc-sub">Enter the admin PIN to access the dashboard.</div>
+    <div class="lc-err" id="loginErr"></div>
+    <div class="fg">
+      <label>Admin PIN</label>
+      <input type="text" inputmode="numeric" autocomplete="off" id="adminPin" placeholder="Enter admin PIN (6+ digits)"
+        style="-webkit-text-security:disc"
+        onkeydown="if(event.key==='Enter')doAdminLogin()">
+    </div>
+    <button class="btn-gold" id="loginBtn" onclick="doAdminLogin()">Sign In</button>
+    <div style="margin-top:12px;font-size:11px;color:#888">
+      First time here? Entering a PIN now sets it for this portal.<br>
+      Contact <a href="javascript:void(0)" style="color:#C8973A" >ctie [at] kletech.ac.in</a>
+      for access issues
+    </div>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="tb-left">
+    <img class="tb-logo" src="<?= KLE_LOGO ?>" alt="KLE"
+      onerror="this.style.display='none'">
+    <div class="tb-div"></div>
+    <div>
+      <div class="tb-title">CTIE Admin Dashboard</div>
+      <div class="tb-sub">Internship Platform</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="navPage('HelpAdmin')" type="button">Guide</button>
+    <button class="tb-btn" onclick="doLogout()">Sign Out</button>
+    <img class="tb-logo-r" src="<?= CTIE_LOGO ?>" alt="CTIE"
+      onerror="this.style.display='none'">
+  </div>
+</div>
+
+<!-- Main dashboard -->
+<div class="main">
+  <div class="page-head">
+    <div>
+      <h1>Internship Overview</h1>
+      <p id="dashDate">Loading...</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="tb-btn-gold" onclick="navPage('AdminReports')">&#128202; Reports</button>
+      <button class="tb-btn-gold" onclick="loadAll()">&#8635; Refresh</button>
+      <button class="tb-btn-gold" onclick="navPage('AdminSettings')">&#9881; Settings</button>
+      <button class="tb-btn" onclick="exportCSV()">Export CSV</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="stTotal">--</div><div class="stat-lbl">Total Applications</div></div>
+    <div class="stat-card"><div class="stat-val" id="stActive" style="color:#1D9E75">--</div><div class="stat-lbl">Active Interns</div></div>
+    <div class="stat-card"><div class="stat-val" id="stCompleted" style="color:#0D47A1">--</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat-card warn"><div class="stat-val" id="stSLA">--</div><div class="stat-lbl">SLA Warnings</div></div>
+    <div class="stat-card danger"><div class="stat-val" id="stOverdue">--</div><div class="stat-lbl">Overdue (action needed)</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <div class="tab on"  onclick="showTab('all',   this)">All Applications</div>
+    <div class="tab"     onclick="showTab('sla',   this)">&#9888; SLA Alerts</div>
+    <div class="tab"     onclick="showTab('roles', this)">Open Roles</div>
+    <div class="tab"     onclick="showTab('starts',this)">Startups</div>
+  </div>
+
+  <!-- All Applications -->
+  <div class="tab-panel on" id="tabAll">
+    <div class="filter-bar">
+      <input class="srch" type="text" id="appSearch" placeholder="Search name, startup, App ID..."
+        oninput="renderApps()">
+      <select class="flt" id="appStatus" onchange="renderApps()">
+        <option value="">All Statuses</option>
+        <option>Applied</option>
+        <option>Shortlisted</option>
+        <option>Interview Scheduled</option>
+        <option>Interview Held -- Outcome Pending</option>
+        <option>Offer Pending OTP</option>
+        <option>Selected</option>
+        <option>Completed</option>
+        <option>Not Selected</option>
+        <option>Closed -- Reschedule Limit</option>
+        <option>Closed -- No Response</option>
+        <option>Closed -- No Outcome</option>
+      </select>
+      <select class="flt" id="appStartup" onchange="renderApps()">
+        <option value="">All Startups</option>
+      </select>
+      <span id="appCount" style="font-size:12px;color:#888;white-space:nowrap"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>
+          <th>App ID</th><th>Student</th><th>Startup</th>
+          <th>Status</th><th>Applied</th><th>Reschedules</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="appTbody">
+          <tr><td colspan="7" class="empty"><span class="spin" style="border-top-color:#C8973A;border-color:rgba(200,151,58,.2)"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLA Alerts -->
+  <div class="tab-panel" id="tabSla">
+    <div class="filter-bar">
+      <div style="font-size:13px;color:#E65100;font-weight:700">
+        &#9888; Applications needing immediate attention
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>
+          <th>App ID</th><th>Student</th><th>Startup</th>
+          <th>Status</th><th>Days/Hours Overdue</th><th>Risk</th>
+        </tr></thead>
+        <tbody id="slaTbody">
+          <tr><td colspan="6" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Open Roles -->
+  <div class="tab-panel" id="tabRoles">
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>
+          <th>Internship ID</th><th>Role</th><th>Startup</th>
+          <th>Positions</th><th>Applications</th><th>Posted</th><th>Deadline</th>
+        </tr></thead>
+        <tbody id="rolesTbody">
+          <tr><td colspan="7" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Startups -->
+  <div class="tab-panel" id="tabStarts">
+    <button class="btn-gold add-startup-btn" style="width:auto;padding:9px 18px;font-size:12px"
+      onclick="openAddStartupModal()" type="button">+ Add Startup</button>
+    <button class="add-startup-btn" style="width:auto;padding:9px 18px;font-size:12px;
+      background:#fff;border:1px solid #C8973A;color:#0B1F3A;margin-left:8px"
+      onclick="openInviteStartupModal()" type="button">&#9993; Invite Startup</button>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr>
+          <th>Logo</th><th>Startup ID</th><th>Name</th><th>Sector</th>
+          <th>Posted</th><th>Selected</th><th>Strikes</th><th>Active</th>
+        </tr></thead>
+        <tbody id="startsTbody">
+          <tr><td colspan="8" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Startup modal -->
+<div class="modal-bg" id="addStartupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAddStartupModal()" type="button">&#10005;</button>
+    <div class="modal-title">Add Startup</div>
+    <div class="lc-err" id="addStartupErr"></div>
+    <div class="g2">
+      <div class="fg">
+        <label>Startup Name <span class="req">*</span></label>
+        <input type="text" id="asName" placeholder="AgroSense Technologies">
+      </div>
+      <div class="fg">
+        <label>Contact Email <span class="req">*</span></label>
+        <input type="email" id="asEmail" placeholder="contact@startup.com">
+      </div>
+    </div>
+    <div class="g2">
+      <div class="fg">
+        <label>Sector <span class="req">*</span></label>
+        <input type="text" id="asSector" placeholder="AgriTech">
+      </div>
+      <div class="fg">
+        <label>Stage</label>
+        <input type="text" id="asStage" placeholder="Seed / Series A / ...">
+      </div>
+    </div>
+    <div class="g2">
+      <div class="fg">
+        <label>Founded Year</label>
+        <input type="number" id="asFounded" placeholder="2022">
+      </div>
+      <div class="fg">
+        <label>Website</label>
+        <input type="url" id="asWebsite" placeholder="https://...">
+      </div>
+    </div>
+    <div class="fg">
+      <label>About</label>
+      <textarea id="asAbout" rows="2" placeholder="Short description shown on their public profile"></textarea>
+    </div>
+    <div class="g2">
+      <div class="fg">
+        <label>OPC Name</label>
+        <input type="text" id="asOpcName" placeholder="On-campus point of contact">
+      </div>
+      <div class="fg">
+        <label>OPC Phone</label>
+        <input type="text" id="asOpcPhone">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Logo URL</label>
+      <input type="url" id="asLogo" placeholder="https://..." oninput="document.getElementById('asLogoPreview').src=this.value">
+      <img id="asLogoPreview" class="logo-preview" src="" onerror="this.style.opacity=0.2" alt="Logo preview">
+      <div class="hint" style="font-size:11px;color:#888;margin-top:4px">
+        This appears on their public profile and role listings -- it's their brand on the portal.
+      </div>
+    </div>
+    <button class="btn-gold" id="addStartupBtn" onclick="submitAddStartup()" type="button">Add Startup</button>
+  </div>
+</div>
+
+<!-- Invite Startup modal -->
+<div class="modal-bg" id="inviteStartupModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeInviteStartupModal()" type="button">&#10005;</button>
+    <div class="modal-title">Invite Startup</div>
+    <div class="hint" style="font-size:11px;color:#888;margin-bottom:12px">
+      Sends a benefits/invitation email -- no account or login is created. Once they
+      agree to join, onboard them properly with "+ Add Startup".
+    </div>
+    <div class="lc-err" id="inviteStartupErr"></div>
+    <div class="fg">
+      <label>Startup Name <span class="req">*</span></label>
+      <input type="text" id="isName" placeholder="AgroSense Technologies">
+    </div>
+    <div class="fg">
+      <label>Contact Person</label>
+      <input type="text" id="isContactName" placeholder="Optional -- used in the greeting">
+    </div>
+    <div class="fg">
+      <label>Contact Email <span class="req">*</span></label>
+      <input type="email" id="isEmail" placeholder="contact@startup.com">
+    </div>
+    <button class="btn-gold" id="inviteStartupBtn" onclick="submitInviteStartup()" type="button">Send Invitation</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="site-footer">
+  Made with <span class="rhc-heart">&#10084;</span> ~rhc <span class="sf-div">&middot;</span> EE Lab, KLE-CTIE <span class="sf-div">&middot;</span> Last updated <span class="sf-updated">&mdash; <?= LAST_UPDATED ?></span>
+</div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#8679;</button>
+<script>
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('scrollTopBtn');
+  if(btn){if(window.scrollY>300)btn.classList.add('show');else btn.classList.remove('show');}
+});
+</script><script>
+
+var EXEC_URL = '<?= EXEC_URL ?>';
+var PAGES    = <?!= PAGES_JSON ?>;
+
+function nav(key) {
+  var url = PAGES[key] || PAGES['Home'];
+  window.top.location.href = url;
+}
+function navPage(key) { nav(key); }
+function navSector(s) {
+  window.top.location.href = (PAGES['Browse'] || EXEC_URL) + '&sector=' + encodeURIComponent(s);
+}
+var ADMIN_TOKEN = null;
+var allApps     = [];
+var allRoles    = [];
+var allStarts   = [];
+var isLoggedIn  = false;
+
+// Check session
+(function(){
+  try {
+    var saved = sessionStorage.getItem('ctie_admin_session');
+    if (!saved) return;
+    var parsed = JSON.parse(saved);
+    if (!parsed.token || !parsed.ts || Date.now() - parsed.ts > 6*60*60*1000) {
+      sessionStorage.removeItem('ctie_admin_session');
+      return;
+    }
+    ADMIN_TOKEN = parsed.token;
+    authed();
+  } catch(e){}
+})();
+
+function doAdminLogin() {
+  var pin = document.getElementById('adminPin').value.trim();
+  if (!pin) { showErr('Enter the admin PIN'); return; }
+  var btn = document.getElementById('loginBtn');
+  if (btn) { btn.disabled = true; }
+  google.script.run
+    .withSuccessHandler(function(r) {
+      if (btn) { btn.disabled = false; }
+      if (!r || !r.ok) { showErr(r ? r.msg : 'Login failed'); return; }
+      ADMIN_TOKEN = r.token;
+      try {
+        sessionStorage.setItem('ctie_admin_session', JSON.stringify({ token: r.token, ts: Date.now() }));
+      } catch(e){}
+      authed();
+    })
+    .withFailureHandler(function(e) {
+      if (btn) { btn.disabled = false; }
+      showErr('Error: ' + e.message);
+    })
+    .adminLogin(pin);
+}
+function showErr(msg){
+  var el=document.getElementById('loginErr'); el.textContent=msg; el.classList.add('show');
+}
+function authed() {
+  isLoggedIn = true;
+  document.getElementById('loginOverlay').style.display = 'none';
+  var d = new Date();
+  document.getElementById('dashDate').textContent =
+    d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  loadAll();
+}
+function doLogout() {
+  if (ADMIN_TOKEN) { try { google.script.run.logout(ADMIN_TOKEN); } catch(e){} }
+  isLoggedIn = false;
+  ADMIN_TOKEN = null;
+  try { sessionStorage.removeItem('ctie_admin_session'); } catch(e){}
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('adminPin').value = '';
+}
+// Returns true (and bounces to login) if the server reports an expired session.
+function isSessionExpired(r) {
+  if (r && r.ok === false && /session expired/i.test(r.msg || '')) {
+    doLogout();
+    showErr('Your session expired. Please log in again.');
+    return true;
+  }
+  return false;
+}
+
+function loadAll() {
+  loadApplications();
+  loadRoles();
+  loadStartups();
+}
+
+// Load all applications (admin sees every status, every startup)
+function loadApplications() {
+  google.script.run
+    .withSuccessHandler(function(r) {
+      if (isSessionExpired(r)) return;
+      allApps = r && r.ok ? (r.applications || []) : [];
+      if (!r || !r.ok) toast('err', 'Error loading applications: ' + (r && r.msg || ''));
+
+      // Populate startup filter from the applications we just loaded
+      var startupIds = [];
+      var startupNames = {};
+      allApps.forEach(function(a){
+        if (a.Startup_ID && startupIds.indexOf(a.Startup_ID)<0) {
+          startupIds.push(a.Startup_ID);
+          startupNames[a.Startup_ID] = a.Startup_Name;
+        }
+      });
+      var sel = document.getElementById('appStartup');
+      while(sel.options.length>1) sel.remove(1);
+      startupIds.forEach(function(id){
+        var o=document.createElement('option'); o.value=id;
+        o.textContent=startupNames[id]||id; sel.appendChild(o);
+      });
+
+      renderApps(); renderSLA(); updateStats();
+    })
+    .withFailureHandler(function(e){ toast('err','Error loading data: '+e.message); })
+    .getAdminApplications(ADMIN_TOKEN);
+}
+
+function loadRoles() {
+  google.script.run
+    .withSuccessHandler(function(r){
+      if (isSessionExpired(r)) return;
+      allRoles = r&&r.ok ? r.internships : [];
+      renderRoles();
+    })
+    .withFailureHandler(function(){})
+    .getAllInternships(ADMIN_TOKEN);
+}
+
+var allStartups = [];
+function loadStartups() {
+  google.script.run
+    .withSuccessHandler(function(r){
+      if (isSessionExpired(r)) return;
+      allStartups = r&&r.ok ? r.startups : [];
+      renderStartups();
+    })
+    .withFailureHandler(function(){})
+    .getAllStartups(ADMIN_TOKEN);
+}
+function renderStartups() {
+  if (!allStartups.length) {
+    document.getElementById('startsTbody').innerHTML =
+      '<tr><td colspan="8" class="empty">No startups yet. Click "+ Add Startup" to create one.</td></tr>';
+    return;
+  }
+  document.getElementById('startsTbody').innerHTML = allStartups.map(function(s){
+    var active = String(s.Active||'').toUpperCase()==='TRUE';
+    return '<tr>'
+      +'<td>'+(s.Logo_URL
+          ? '<img src="'+esc(s.Logo_URL)+'" alt="" style="width:32px;height:32px;object-fit:contain;border-radius:4px" onerror="this.style.display=\'none\'">'
+          : '<span class="sub">--</span>')+'</td>'
+      +'<td><div class="bold" style="font-family:monospace">'+esc(s.Startup_ID||'')+'</div></td>'
+      +'<td>'+esc(s.Startup_Name||'')+'</td>'
+      +'<td>'+esc(s.Sector||'')+'</td>'
+      +'<td style="text-align:center">'+(s.Total_Posted||0)+'</td>'
+      +'<td style="text-align:center">'+(s.Total_Selected||0)+'</td>'
+      +'<td style="text-align:center">'+(s.Reschedule_Strikes||0)+'</td>'
+      +'<td><span class="badge '+(active?'b-green':'b-gray')+'">'+(active?'Active':'Inactive')+'</span></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function openAddStartupModal() {
+  ['asName','asEmail','asSector','asStage','asFounded','asWebsite','asAbout','asOpcName','asOpcPhone','asLogo']
+    .forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('asLogoPreview').src = '';
+  document.getElementById('addStartupErr').classList.remove('show');
+  document.getElementById('addStartupModal').classList.add('show');
+}
+function closeAddStartupModal() {
+  document.getElementById('addStartupModal').classList.remove('show');
+}
+function submitAddStartup() {
+  var name  = document.getElementById('asName').value.trim();
+  var email = document.getElementById('asEmail').value.trim();
+  var sector= document.getElementById('asSector').value.trim();
+  var err   = document.getElementById('addStartupErr');
+  if (!name || !email || !sector) {
+    err.textContent = 'Name, contact email, and sector are required.';
+    err.classList.add('show');
+    return;
+  }
+  var btn = document.getElementById('addStartupBtn');
+  btn.disabled = true; btn.textContent = 'Adding...';
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled = false; btn.textContent = 'Add Startup';
+      if (isSessionExpired(r)) return;
+      if (!r || !r.ok) {
+        err.textContent = r ? r.msg : 'Failed to add startup';
+        err.classList.add('show');
+        return;
+      }
+      closeAddStartupModal();
+      toast('ok', r.msg || ('Startup added: ' + r.startupId));
+      loadStartups();
+    })
+    .withFailureHandler(function(e) {
+      btn.disabled = false; btn.textContent = 'Add Startup';
+      err.textContent = 'Error: ' + e.message;
+      err.classList.add('show');
+    })
+    .addStartup(ADMIN_TOKEN, {
+      name:        name,
+      contactEmail:email,
+      sector:      sector,
+      stage:       document.getElementById('asStage').value.trim(),
+      foundedYear: document.getElementById('asFounded').value.trim(),
+      website:     document.getElementById('asWebsite').value.trim(),
+      about:       document.getElementById('asAbout').value.trim(),
+      opcName:     document.getElementById('asOpcName').value.trim(),
+      opcPhone:    document.getElementById('asOpcPhone').value.trim(),
+      logoUrl:     document.getElementById('asLogo').value.trim()
+    });
+}
+
+function openInviteStartupModal() {
+  ['isName','isContactName','isEmail'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('inviteStartupErr').classList.remove('show');
+  document.getElementById('inviteStartupModal').classList.add('show');
+}
+function closeInviteStartupModal() {
+  document.getElementById('inviteStartupModal').classList.remove('show');
+}
+function submitInviteStartup() {
+  var name  = document.getElementById('isName').value.trim();
+  var email = document.getElementById('isEmail').value.trim();
+  var err   = document.getElementById('inviteStartupErr');
+  if (!name || !email) {
+    err.textContent = 'Startup name and contact email are required.';
+    err.classList.add('show');
+    return;
+  }
+  var btn = document.getElementById('inviteStartupBtn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  google.script.run
+    .withSuccessHandler(function(r) {
+      btn.disabled = false; btn.textContent = 'Send Invitation';
+      if (isSessionExpired(r)) return;
+      if (!r || !r.ok) {
+        err.textContent = r ? r.msg : 'Failed to send invitation';
+        err.classList.add('show');
+        return;
+      }
+      closeInviteStartupModal();
+      toast('ok', r.msg || 'Invitation sent.');
+    })
+    .withFailureHandler(function(e) {
+      btn.disabled = false; btn.textContent = 'Send Invitation';
+      err.textContent = 'Error: ' + e.message;
+      err.classList.add('show');
+    })
+    .sendStartupInvitation(ADMIN_TOKEN, {
+      name:        name,
+      contactName: document.getElementById('isContactName').value.trim(),
+      contactEmail:email
+    });
+}
+
+function updateStats() {
+  document.getElementById('stTotal').textContent = allApps.length;
+  document.getElementById('stActive').textContent =
+    allApps.filter(function(a){return a.Status==='Selected';}).length;
+  document.getElementById('stCompleted').textContent =
+    allApps.filter(function(a){return a.Status==='Completed';}).length;
+  var slaApps = getSLAApps();
+  document.getElementById('stSLA').textContent    = slaApps.warn.length;
+  document.getElementById('stOverdue').textContent= slaApps.overdue.length;
+}
+
+function getSLAApps() {
+  var now  = Date.now();
+  var warn = [], overdue = [];
+  allApps.forEach(function(a){
+    var s = a.Status||'';
+    if (s==='Applied') {
+      var dt = new Date(a.Applied_At||'').getTime();
+      var days = (now-dt)/86400000;
+      if (days>=7  && days<14) warn.push({a:a,label:'Review overdue ('+Math.floor(days)+'d)',level:'warn'});
+      if (days>=14) overdue.push({a:a,label:'Auto-close imminent ('+Math.floor(days)+'d)',level:'danger'});
+    }
+    if (s==='Interview Held -- Outcome Pending') {
+      overdue.push({a:a,label:'Outcome overdue',level:'danger'});
+    }
+    if (s.indexOf('Closed')>=0 && s.indexOf('No')>=0) return; // auto-closed, fine
+  });
+  return {warn:warn, overdue:overdue};
+}
+
+function renderApps() {
+  var q   = (document.getElementById('appSearch').value||'').toLowerCase();
+  var st  = document.getElementById('appStatus').value;
+  var sid = document.getElementById('appStartup').value;
+  var list= allApps.filter(function(a){
+    var mq = !q || [a.App_ID,a.Student_Name,a.Startup_Name,a.Institute_Email]
+              .join(' ').toLowerCase().indexOf(q)>=0;
+    var ms = !st  || a.Status===st;
+    var mx = !sid || a.Startup_ID===sid;
+    return mq&&ms&&mx;
+  });
+  document.getElementById('appCount').textContent = list.length+' application'+(list.length!==1?'s':'');
+  if(!list.length){
+    document.getElementById('appTbody').innerHTML='<tr><td colspan="7" class="empty">No applications match your filters</td></tr>';
+    return;
+  }
+  document.getElementById('appTbody').innerHTML = list.map(function(a){
+    var sc  = statusClass(a.Status);
+    var rs  = parseInt(a.Reschedule_Count||0);
+    var isOverdue = a.Status==='Interview Held -- Outcome Pending';
+    var rowCls = isOverdue ? 'overdue-row' : (rs>=2 ? 'sla-row' : '');
+    return '<tr class="'+rowCls+'">'
+      +'<td><div class="bold" style="font-family:monospace">'+esc(a.App_ID||'')+'</div></td>'
+      +'<td><div class="bold">'+esc(a.Student_Name||'')+'</div>'
+      +'<div class="sub">'+esc(a.Institute_Email||'')+'</div>'
+      +'<div class="sub">'+esc(a.Institute_Name||'')+'</div></td>'
+      +'<td>'+esc(a.Startup_Name||'')+'</td>'
+      +'<td><span class="badge '+sc+'">'+esc(a.Status||'')+'</span></td>'
+      +'<td class="sub">'+esc(String(a.Applied_At||'').substring(0,11))+'</td>'
+      +'<td style="text-align:center;font-weight:700;color:'+(rs>=2?'#B71C1C':rs>0?'#E65100':'#888')+'">'+rs+'/2</td>'
+      +'<td><div style="display:flex;gap:4px">'
+      +'<button class="act-btn ab-blue" onclick="trackApp(\'' + esc(a.App_ID) + '\')" type="button">Track</button>'
+      +'</div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderSLA() {
+  var sla = getSLAApps();
+  var all = sla.overdue.concat(sla.warn);
+  if (!all.length) {
+    document.getElementById('slaTbody').innerHTML=
+      '<tr><td colspan="6" class="empty">&#9989; No SLA violations right now</td></tr>';
+    return;
+  }
+  document.getElementById('slaTbody').innerHTML = all.map(function(item){
+    var a = item.a;
+    var rowCls = item.level==='danger'?'overdue-row':'sla-row';
+    return '<tr class="'+rowCls+'">'
+      +'<td><span style="font-family:monospace;font-size:11px">'+esc(a.App_ID||'')+'</span></td>'
+      +'<td>'+esc(a.Student_Name||'')+'</td>'
+      +'<td>'+esc(a.Startup_Name||'')+'</td>'
+      +'<td><span class="badge '+(item.level==='danger'?'b-red':'b-amber')+'">'+esc(a.Status||'')+'</span></td>'
+      +'<td style="font-weight:700;color:'+(item.level==='danger'?'#B71C1C':'#E65100')+'">'+item.label+'</td>'
+      +'<td><span class="badge '+(item.level==='danger'?'b-red':'b-amber')+'">'+
+      (item.level==='danger'?'Action needed':'Warning')+'</span></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function renderRoles() {
+  var all = allRoles;
+  if (!all.length) {
+    document.getElementById('rolesTbody').innerHTML=
+      '<tr><td colspan="7" class="empty">No open roles</td></tr>';
+    return;
+  }
+  document.getElementById('rolesTbody').innerHTML = all.map(function(r){
+    var filled = parseInt(r.Positions_Filled||0);
+    var avail  = parseInt(r.Positions_Available||1);
+    return '<tr>'
+      +'<td><span style="font-family:monospace;font-size:11px">'+esc(r.Internship_ID||'')+'</span></td>'
+      +'<td><div class="bold">'+esc(r.Role_Title||'')+'</div>'
+      +'<div class="sub">'+esc(r.Department||'')+'</div></td>'
+      +'<td>'+esc(r.Startup_Name||'')+'</td>'
+      +'<td style="text-align:center">'
+      +'<span style="color:'+(filled>=avail?'#B71C1C':'#1B5E20');+'font-weight:700">'+filled+'/'+avail+'</span></td>'
+      +'<td style="text-align:center">'+esc(String(r.Total_Applications||0))+'</td>'
+      +'<td class="sub">'+esc(String(r.Posted_At||'').substring(0,11))+'</td>'
+      +'<td class="sub">'+esc(r.Application_Deadline||'--')+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  document.getElementById('tab'+cap(name)).classList.add('on');
+  el.classList.add('on');
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function statusClass(s){
+  var m={
+    'Applied':'b-gold','Shortlisted':'b-blue',
+    'Interview Scheduled':'b-purple',
+    'Interview Held -- Outcome Pending':'b-teal',
+    'Offer Pending OTP':'b-amber',
+    'Selected':'b-green','Completed':'b-green',
+    'Not Selected':'b-gray',
+  };
+  return m[s]||(s.indexOf('Closed')>=0?'b-red':'b-gray');
+}
+
+function exportCSV() {
+  if (!allApps.length){toast('err','No data to export');return;}
+  var headers=['App_ID','Student_Name','Institute_Email','Personal_Email',
+    'Mobile','Institute_Name','Course','Year','CGPA','Startup_Name',
+    'Internship_ID','Status','Applied_At','Reschedule_Count','Notes'];
+  var rows=[headers.join(',')];
+  allApps.forEach(function(a){
+    rows.push(headers.map(function(h){
+      var v=String(a[h]||'');
+      if(v.indexOf(',')>=0||v.indexOf('"')>=0) v='"'+v.replace(/"/g,'""')+'"';
+      return v;
+    }).join(','));
+  });
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download='CTIE_Internship_Export_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('ok','CSV exported');
+}
+
+function trackApp(id){ window.top.location.href = EXEC_URL + '?page=Track&appId=' + encodeURIComponent(id) + '&from=admin'; }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(type,msg){
+  var t=document.getElementById('toast');
+  t.className='toast '+(type==='ok'?'tok':'ter')+' show';
+  t.textContent=msg;clearTimeout(t._t);
+  t._t=setTimeout(function(){t.classList.remove('show');},4000);
+}
+
+// ── NAVIGATION: use window.location for GAS iframe navigation ──
+</script>
+</body>
+</html>
