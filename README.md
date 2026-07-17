@@ -2,7 +2,7 @@
 
 **A single portal connecting classrooms to incubated startups.**
 
-KLE-CTIE connects engineering and management students with CTIE-incubated startups for structured, accountable, SLA-protected internships — no scattered emails, no applications disappearing into silence, no manual tracking.
+Internship requests used to run through Google Forms/Jotform, manual forwarding to department HoDs by discipline, and a second, separate form just to track who joined where. This portal replaces all of it with one accountable, SLA-protected system — no disconnected forms, no applications disappearing into silence, no manual routing.
 
 ## 🚀 Get started
 
